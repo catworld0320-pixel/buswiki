@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>모바일 승차권 예매 통합 앱</title>
+    <title>Mii-rail</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
@@ -33,7 +33,6 @@
             min-height: 100vh;
         }
 
-        /* 모바일 컨테이너 */
         .app-container {
             width: 390px;
             height: 844px;
@@ -44,7 +43,6 @@
             border-radius: 30px;
         }
 
-        /* --- 헤더 --- */
         .header {
             background-color: var(--dark-blue);
             color: white;
@@ -68,8 +66,7 @@
         }
 
         .header i { font-size: 20px; cursor: pointer; }
-
-        /* --- 메인 콘텐츠 영역 --- */
+        
         .content {
             padding: 20px 15px;
             height: 100%;
@@ -78,7 +75,6 @@
             overflow-y: auto;
         }
 
-        /* 탭 뷰 제어 및 애니메이션 */
         .tab-view { 
             display: none; 
         }
@@ -92,7 +88,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 공통 카드 스타일 */
         .card {
             background: white;
             border-radius: 20px;
@@ -110,7 +105,6 @@
 
         .card-header h2 { font-size: 18px; color: var(--dark-blue); }
 
-        /* 토글 스위치 */
         .toggle-switch { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--primary-blue); font-weight: 700; }
         .switch { position: relative; display: inline-block; width: 46px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
@@ -119,7 +113,6 @@
         input:checked + .slider { background-color: var(--primary-blue); }
         input:checked + .slider:before { transform: translateX(22px); }
 
-        /* 출발/도착역 선택부 */
         .station-select { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; text-align: center; }
         .station { flex: 1; cursor: pointer; padding: 10px; border-radius: 10px; transition: background 0.2s; }
         .station:active { background: #f0f0f0; }
@@ -127,7 +120,6 @@
         .station .name { font-size: 30px; font-weight: 700; color: var(--primary-blue); pointer-events: none; letter-spacing: -1px;}
         .station-arrow i { color: var(--text-sub); font-size: 18px; cursor: pointer;}
 
-        /* 옵션 리스트 */
         .option-list { border-top: 1px solid var(--border-color); }
         .option-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border-color); cursor: pointer; }
         .option-item:active { opacity: 0.7; }
@@ -135,12 +127,10 @@
         .option-item .info .value { font-size: 16px; font-weight: 700; color: var(--dark-blue); }
         .option-item i { color: var(--text-sub); }
 
-        /* 버튼 그룹 */
         .btn-group { display: flex; gap: 10px; margin-top: 20px; }
         .btn { flex: 1; padding: 15px 0; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; color: white; cursor: pointer; background-color: var(--primary-blue); text-align: center;}
         .btn-outline { background-color: white; color: var(--primary-blue); border: 1px solid var(--primary-blue); }
 
-        /* 최근 탑승 경로 */
         .recent-header { font-size: 15px; color: var(--dark-blue); font-weight: 700; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
         .recent-route { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .recent-station { text-align: center; width: 40%; }
@@ -149,7 +139,6 @@
         .recent-arrow { color: var(--primary-blue); font-size: 14px; }
         .recent-info { display: flex; justify-content: space-between; font-size: 14px; font-weight: 500; color: var(--dark-blue); }
 
-        /* 열차 조회 결과 스타일 */
         .back-to-home { color: var(--primary-blue); font-size: 14px; font-weight: 700; cursor: pointer; margin-bottom: 15px; display: inline-block; }
         .train-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border-color); }
         .train-info .type { font-size: 12px; font-weight: 700; color: var(--orange); margin-bottom: 2px; }
@@ -160,7 +149,6 @@
         .train-reserve .price { font-size: 13px; font-weight: 700; color: var(--text-main); text-align: right; margin-bottom: 5px; }
         .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 6px; border: none; background: var(--primary-blue); color: white; cursor: pointer; }
 
-        /* 즐겨찾기, 할인정기권, 나의티켓 스타일 */
         .fav-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border-color); }
         .fav-route { font-size: 16px; font-weight: 700; color: var(--dark-blue); }
         .fav-star { color: #FFD700; font-size: 18px; cursor: pointer; }
@@ -177,7 +165,6 @@
         .ticket-footer { border-top: 1px dashed rgba(255,255,255,0.3); padding-top: 15px; display: flex; justify-content: space-between; align-items: center; font-size: 13px;}
         .qr-area { background: white; padding: 5px; border-radius: 5px; color: black; font-size: 30px; }
 
-        /* 하단 네비게이션 */
         .bottom-nav {
             position: absolute;
             bottom: 0;
@@ -194,12 +181,11 @@
         .nav-item i { font-size: 20px; }
         .nav-item.active { color: var(--primary-blue); font-weight: 700; }
 
-        /* --- [추가] 모달 (팝업) 스타일 --- */
         .modal-overlay {
             display: none; 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); z-index: 100;
-            justify-content: center; align-items: flex-end; /* 아래에서 올라오는 바텀 시트 형태 */
+            justify-content: center; align-items: flex-end;
         }
         .modal-overlay.active { display: flex; }
         .modal-content {
@@ -211,12 +197,10 @@
         
         .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: var(--dark-blue); }
         
-        /* 역 선택 모달 리스트 */
         .station-list { list-style: none; overflow-y: auto; flex-grow: 1; }
         .station-item { padding: 15px 0; border-bottom: 1px solid #f0f0f0; font-size: 16px; font-weight: 500; cursor: pointer; text-align: center; }
         .station-item:active { background: #fafafa; color: var(--primary-blue); font-weight: 700; }
         
-        /* 인원 선택 모달 */
         .passenger-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f0f0f0;}
         .passenger-info-text { font-size: 16px; font-weight: 500; color: var(--text-main); }
         .passenger-sub { font-size: 12px; color: var(--text-sub); display: block; margin-top: 3px; }
@@ -303,7 +287,7 @@
 
         <div id="view-favorites" class="tab-view">
             <div class="card">
-                <div class="recent-header">자주 부르는 경로</div>
+                <div class="recent-header">즐겨찾기</div>
                 <div class="fav-item">
                     <div class="fav-route">동해 <i class="fa-solid fa-arrow-right"></i> 남장천</div>
                     <i class="fa-solid fa-star fav-star"></i>
@@ -323,14 +307,14 @@
             <div class="card coupon-card">
                 <div>
                     <div class="coupon-title">힘내라 청춘 할인 혜택</div>
-                    <div class="coupon-desc">만 25세부터 33세까지 지정열차 할인</div>
+                    <div class="coupon-desc">만 19세부터 33세까지 지정열차 할인</div>
                 </div>
                 <button class="btn-sm">받기</button>
             </div>
             <div class="card coupon-card">
                 <div>
-                    <div class="coupon-title">미화시민 특별할인</div>
-                    <div class="coupon-desc">미화시 거주자 대상 전노선 10% 추가할인</div>
+                    <div class="coupon-title">미화도민 특별할인</div>
+                    <div class="coupon-desc">미화도 거주자 대상 전노선 99% 추가할인</div>
                 </div>
                 <button class="btn-sm">등록</button>
             </div>
@@ -340,7 +324,7 @@
             <div class="ticket-box">
                 <div class="ticket-header">
                     <span id="ticket-passenger-info">승차권 (어른 1명)</span>
-                    <span style="color:var(--orange); font-weight:700;">타는 곳 번호 미정</span>
+                    <span style="color:var(--orange); font-weight:700;">8I</span>
                 </div>
                 <div class="ticket-body">
                     <div class="ticket-stn">
@@ -379,7 +363,7 @@
             <i class="fa-solid fa-certificate"></i><span>할인·정기권</span>
         </div>
         <div class="nav-item" id="nav-tickets" onclick="switchTab('tickets')">
-            <i class="fa-solid fa-ticket"></i><span>나의 티켓</span>
+            <i class="fa-solid fa-ticket"></i><span>마이페이지</span>
         </div>
     </nav>
 </div>
@@ -437,18 +421,13 @@
 </div>
 
 <script>
-    // --- 기본 데이터 설정 ---
-    // 노선도 기반 역 목록
     const STATIONS = ["동해", "남장천", "장천", "서해", "미화", "서산", "도북진", "도중산"];
-    
-    // 현재 상태 변수
     let currentDep = "동해";
     let currentArr = "남장천";
     let targetStationType = 'dep'; // 'dep' 또는 'arr'
     
     let passCounts = { adult: 1, teen: 0, child: 0 };
 
-    // --- 화면 및 탭 전환 기능 ---
     function switchTab(tabId) {
         document.querySelectorAll('.tab-view').forEach(view => view.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
@@ -460,7 +439,6 @@
         if(targetNav) targetNav.classList.add('active');
     }
 
-    // --- 역 선택 기능 ---
     function openStationModal(type) {
         targetStationType = type;
         document.getElementById('station-modal-title').innerText = type === 'dep' ? '출발역 선택' : '도착역 선택';
@@ -490,7 +468,6 @@
         closeModals();
     }
 
-    // 출발/도착역 화살표 누르면 서로 바뀌는 기능
     function swapStations() {
         let temp = currentDep;
         currentDep = currentArr;
@@ -499,7 +476,6 @@
         document.getElementById('arr-station').innerText = currentArr;
     }
 
-    // --- 인원 선택 기능 ---
     function openPassengerModal() {
         document.getElementById('passenger-modal').classList.add('active');
     }
@@ -508,7 +484,6 @@
         let newCount = passCounts[type] + change;
         if (newCount < 0) newCount = 0;
         
-        // 최소 1명은 탑승해야 하므로 모두 0명이 되는 것을 방지
         if (type === 'adult' && newCount === 0 && passCounts.teen === 0 && passCounts.child === 0 && change < 0) return;
 
         passCounts[type] = newCount;
@@ -533,13 +508,11 @@
         closeModals();
     }
 
-    // 모달 닫기
     function closeModals(event) {
         document.getElementById('station-modal').classList.remove('active');
         document.getElementById('passenger-modal').classList.remove('active');
     }
 
-    // --- 열차 조회 및 구매 기능 ---
     function getPassengerSummary() {
         let text = [];
         if (passCounts.adult > 0) text.push(`어른 ${passCounts.adult}명`);
@@ -557,8 +530,7 @@
         const passText = getPassengerSummary();
         const confirmMsg = `[${currentDep} ➡️ ${currentArr}]\n인원: ${passText}\n\n등록된 카드로 간편결제를 진행하시겠습니까?`;
         
-        if(confirm(confirmMsg)) {
-            // 결제 완료 가정 후 마이페이지 티켓 업데이트
+        if(confirm(confirmMsg)) 
             document.getElementById('ticket-dep').innerText = currentDep;
             document.getElementById('ticket-arr').innerText = currentArr;
             document.getElementById('ticket-passenger-info').innerText = `승차권 (${passText})`;
@@ -572,13 +544,11 @@
             return;
         }
 
-        // 결과 헤더 텍스트 변경
         document.getElementById('result-header').innerHTML = `${currentDep} <i class="fa-solid fa-arrow-right" style="color:var(--primary-blue); font-size:12px; margin:0 5px;"></i> ${currentArr} 조회 결과`;
 
         const container = document.getElementById('train-list-container');
         container.innerHTML = ""; 
 
-        // 동적으로 스케줄 데이터 생성 (예시)
         const dummyTrains = [
             { type: "급행", no: "011", depTime: "14:00", arrTime: "14:45", price: "5,400원", state: "예약가능" },
             { type: "완행", no: "204", depTime: "14:30", arrTime: "15:20", price: "3,200원", state: "예약가능" },
