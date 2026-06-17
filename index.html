@@ -530,7 +530,7 @@
         const passText = getPassengerSummary();
         const confirmMsg = `[${currentDep} ➡️ ${currentArr}]\n인원: ${passText}\n\n등록된 카드로 간편결제를 진행하시겠습니까?`;
         
-        if(confirm(confirmMsg)) 
+        if(confirm(confirmMsg)) {
             document.getElementById('ticket-dep').innerText = currentDep;
             document.getElementById('ticket-arr').innerText = currentArr;
             document.getElementById('ticket-passenger-info').innerText = `승차권 (${passText})`;
