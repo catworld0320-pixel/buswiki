@@ -7,6 +7,7 @@
             configurable: !0
         })
     }
+    
     var e = "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : "undefined" != typeof window ? window : "undefined" != typeof global ? global : {}
       , i = {}
       , r = {}
