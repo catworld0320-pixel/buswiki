@@ -11,7 +11,9 @@ def generate_data():
             # 롱폼/숏폼 폴더 경로
             for type_name, key in [('video', 'videos'), ('short', 'shorts')]:
                 path = os.path.join(channel_name, type_name)
-                if os.path.exists(path):
+                
+                # 수정된 부분: exists 대신 isdir을 사용하여 폴더인지 확실히 검사
+                if os.path.isdir(path): 
                     files = [f for f in os.listdir(path) if f.endswith('.mp4')]
                     for f in files:
                         num = int(''.join(filter(str.isdigit, f)) or 0)
