@@ -1,332 +1,226 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Youtube</title>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/assets/styles-BJpeJycC.css" data-precedence="default"><title>아이스버디 — 북극곰을 지켜요</title><meta name="author" content="IceBuddy"><meta name="twitter:site" content="@IceBuddy"><meta name="twitter:title" content="아이스버디 — 북극곰을 지켜요"><meta name="twitter:description" content="북극곰이 사라지면 우리의 미래도 위험해져요. 지구의 온도를 조금이라도 낮추는 작은 실천으로 북극곰과 지구를 함께 지켜봐요."><meta property="og:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4c102dda-a8ba-44f9-b831-e27f116d4c63/id-preview-e4875b20--09a3d5ad-4b94-4339-8fd7-7ac0c417588c.lovable.app-1785283743860.png"><meta name="twitter:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4c102dda-a8ba-44f9-b831-e27f116d4c63/id-preview-e4875b20--09a3d5ad-4b94-4339-8fd7-7ac0c417588c.lovable.app-1785283743860.png"><meta name="description" content="북극곰이 사라지면 우리의 미래도 위험해져요. 지구의 온도를 조금이라도 낮추는 작은 실천으로 북극곰과 지구를 함께 지켜봐요."><meta property="og:title" content="아이스버디 — 북극곰을 지켜요"><meta property="og:description" content="북극곰이 사라지면 우리의 미래도 위험해져요. 지구의 온도를 조금이라도 낮추는 작은 실천으로 북극곰과 지구를 함께 지켜봐요."><meta property="og:type" content="website"><meta name="twitter:card" content="summary_large_image"><link rel="modulepreload" href="/assets/index-BPhT_T7A.js"><link rel="modulepreload" href="/assets/routes-BFXCU9KC.js"><link rel="icon" type="image/png" href="/__l5e/assets-v1/e428d064-f254-46c7-9420-a844267d2cb0/favicon.png">
 <style>
-  /* 기본 초기화 및 레이아웃 */
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Roboto', sans-serif; background-color: #0f0f0f; color: #f1f1f1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-  header { height: 56px; background-color: #0f0f0f; display: flex; align-items: center; padding: 0 16px; border-bottom: 1px solid #303030; }
-  .logo { font-size: 20px; font-weight: bold; cursor: pointer; }
+	@font-face {
+		font-family: 'CameraPlainVariable';
+		src: url('https://cdn.gpteng.co/mcp-widgets/v1/fonts/CameraPlainVariable.woff2') format('woff2');
+		font-weight: 100 900;
+		font-style: normal;
+		font-display: swap;
+	}
 
-  .main-container { display: flex; flex: 1; height: calc(100vh - 56px); position: relative; }
-  
-  /* 화면 전환용 클래스 */
-  .view-section { display: none; flex: 1; height: 100%; overflow-y: auto; padding: 24px; background-color: #0f0f0f; }
-  .view-section.active { display: block; }
+	#lovable-badge {
+		--badge-bg: #1b1b1b;
+		--badge-text: #c5c1b9;
+		--badge-text-hover: #dcdad5;
+		--badge-radius: 6px;
+		--badge-padding: 8px;
+		--badge-gap: 6px;
+		--badge-shadow: 
+			0 0 0 1px rgba(0, 0, 0, 0.88),
+			0 1px 0 0 rgba(0, 0, 0, 0.04),
+			0 2px 2px -1px rgba(0, 0, 0, 0.08),
+			0 4px 4px -2px rgba(0, 0, 0, 0.08),
+			0 8px 8px -4px rgba(0, 0, 0, 0.08),
+			0 16px 16px -8px rgba(0, 0, 0, 0.08);
+		--badge-transition-duration: 0.2s;
+		--badge-transition-easing: cubic-bezier(0.16, 1, 0.32, 1);
+		--focus-color: #575ECF;
+		--focus-offset: 2px;
+		--focus-width: 2px;
+		
+		position: fixed;
+		bottom: 12px;
+		right: 12px;
+		height: 24px;
+		display: flex;
+		align-items: center;
+		z-index: 1000000;
+		background-color: var(--badge-bg) !important;
+		color: var(--badge-text) !important;
+		border-radius: var(--badge-radius);
+		box-shadow: var(--badge-shadow) !important;
+		font-size: 12px;
+		font-family: CameraPlainVariable, "CameraPlainVariable Fallback", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+		font-weight: 400 !important;
+		text-transform: none !important;
+		font-feature-settings: normal !important;
+		transform: translateZ(0);
+		will-change: transform, opacity;
+	}
 
-  /* 1. 채널 리스트 화면 */
-  .channel-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
-  .channel-card { background-color: #272727; padding: 30px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.2s; }
-  .channel-card:hover { background-color: #3f3f3f; }
-  .channel-icon { width: 80px; height: 80px; background-color: #ff0000; border-radius: 50%; margin: 0 auto 16px; display: flex; justify-content: center; align-items: center; font-size: 30px; font-weight: bold; }
+	#lovable-badge-cta {
+		display: flex;
+		align-items: center;
+		gap: var(--badge-gap);
+		padding: 0 var(--badge-padding);
+		height: 100%;
+		color: inherit;
+		text-decoration: none;
+		white-space: nowrap;
+		border-radius: var(--badge-radius) 0 0 var(--badge-radius);
+		transition: 
+			background-color var(--badge-transition-duration) ease,
+			color var(--badge-transition-duration) ease,
+			transform 0.1s ease;
+	}
 
-  /* 2. 채널 상세 (롱폼/숏폼 탭) */
-  .channel-header { margin-bottom: 20px; font-size: 24px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
-  .back-btn { cursor: pointer; padding: 8px 12px; background-color: #272727; border-radius: 8px; font-size: 14px; display: inline-block; }
-  .back-btn:hover { background-color: #3f3f3f; }
-  .tabs { display: flex; gap: 20px; margin-bottom: 20px; border-bottom: 1px solid #303030; }
-  .tab { padding: 10px 0; cursor: pointer; color: #aaa; font-weight: bold; }
-  .tab.active { color: #fff; border-bottom: 3px solid #f1f1f1; }
+	#lovable-badge-cta:hover {
+		background: rgba(255, 255, 255, 0.04);
+		color: var(--badge-text-hover);
+	}
 
-  /* 영상 그리드 (롱폼) */
-  .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-  .video-card { cursor: pointer; }
-  .thumbnail { width: 100%; aspect-ratio: 16 / 9; background-color: #333; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 24px; color: #777;}
-  .video-title { margin-top: 10px; font-size: 16px; }
+	#lovable-badge-cta:active {
+		transform: scale(0.98);
+	}
 
-  /* 사진과 같은 숏폼 그리드 (썸네일 목록) */
-  .shorts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
-  .short-card { cursor: pointer; display: flex; flex-direction: column; gap: 8px; }
-  .short-thumbnail { width: 100%; aspect-ratio: 9 / 16; background-color: #272727; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 40px; color: #555; transition: border-radius 0.2s; }
-  .short-card:hover .short-thumbnail { border-radius: 4px; }
-  .short-title { font-size: 14px; font-weight: 500; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+	#lovable-badge-cta:focus {
+		outline: none;
+	}
 
-  /* 3. 시청 화면 (롱폼) */
-  .watch-container { display: flex; flex-direction: column; max-width: 1200px; margin: 0 auto; }
-  .player-wrapper { width: 100%; aspect-ratio: 16 / 9; background-color: #000; border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
-  
-  /* 4. 시청 화면 (쇼츠 - 세로 스크롤) */
-  #shorts-watch-view { padding: 0; background-color: #000; position: relative; }
-  .shorts-scroll-container { 
-    width: 100%; 
-    height: 100%; 
-    overflow-y: scroll; 
-    scroll-snap-type: y mandatory; /* 스크롤 딱딱 맞추기 */
-  }
-  /* 스크롤바 숨기기 (선택사항) */
-  .shorts-scroll-container::-webkit-scrollbar { display: none; } 
-  .shorts-scroll-container { -ms-overflow-style: none; scrollbar-width: none; }
+	#lovable-badge-cta:focus-visible {
+		outline: var(--focus-width) solid var(--focus-color);
+		outline-offset: var(--focus-offset);
+		z-index: 1;
+	}
 
-  .short-player-wrapper { 
-    width: 100%; 
-    height: 100%; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    scroll-snap-align: start; /* 각 요소가 화면 맨 위에서 딱 멈추도록 설정 */
-    position: relative;
-    padding: 20px 0;
-  }
-  .short-player-box { 
-    width: 100%; 
-    max-width: 450px; 
-    height: 100%;
-    max-height: 90vh; 
-    background-color: #121212; 
-    border-radius: 16px; 
-    overflow: hidden; 
-    position: relative;
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
-  }
-  .short-info-overlay {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    padding: 30px 20px 20px;
-    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-    color: #fff;
-    pointer-events: none;
-  }
+	#lovable-badge-text {
+		line-height: 1;
+	}
+
+	#lovable-badge-divider {
+		width: 1px;
+		height: 24px;
+		background-color: rgba(255, 255, 255, 0.04);
+		flex-shrink: 0;
+	}
+
+	#lovable-badge-close {
+		width: 24px;
+		height: 24px;
+		min-width: 24px;
+		min-height: 24px;
+		cursor: pointer;
+		background: none;
+		border: none;
+		padding: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 0 var(--badge-radius) var(--badge-radius) 0;
+		flex-shrink: 0;
+		transition: 
+			background-color var(--badge-transition-duration) ease,
+			transform 0.1s ease;
+	}
+
+	#lovable-badge-close:hover {
+		background: rgba(255, 255, 255, 0.04);
+	}
+
+	#lovable-badge-close:active {
+		transform: scale(0.92);
+	}
+
+	#lovable-badge-close:focus {
+		outline: none;
+	}
+
+	#lovable-badge-close:focus-visible {
+		outline: var(--focus-width) solid var(--focus-color);
+		outline-offset: calc(var(--focus-offset) * -1);
+		z-index: 1;
+	}
+
+	#lovable-badge-close svg path {
+		fill: var(--badge-text);
+		transition: fill var(--badge-transition-duration) ease;
+	}
+
+	#lovable-badge-close:hover svg path {
+		fill: var(--badge-text-hover);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		#lovable-badge-cta,
+		#lovable-badge-close,
+		#lovable-badge-close svg path {
+			transition: none;
+		}
+		
+		#lovable-badge-cta:active,
+		#lovable-badge-close:active {
+			transform: none;
+		}
+	}
+
+	@media (prefers-contrast: high) {
+		#lovable-badge {
+			--badge-bg: #000;
+			--badge-text: #fff;
+			--badge-text-hover: #fff;
+			border: 2px solid currentColor;
+		}
+		
+		#lovable-badge-cta:focus-visible,
+		#lovable-badge-close:focus-visible {
+			outline-width: 3px;
+		}
+	}
 </style>
-</head>
-<body>
+<script defer="" src="/~flock.js" data-proxy-url="/~api/analytics"></script></head><body><div class="flex min-h-screen flex-col"><header class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-md"><div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8"><a class="flex items-center gap-2 text-foreground transition-all duration-300 hover:text-arctic-deep active" href="/" data-status="active" aria-current="page"><div class="flex h-9 w-9 items-center justify-center rounded-full bg-arctic-sky text-arctic-deep transition-transform duration-300 hover:rotate-45"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-snowflake h-5 w-5" aria-hidden="true"><path d="m10 20-1.25-2.5L6 18"></path><path d="M10 4 8.75 6.5 6 6"></path><path d="m14 20 1.25-2.5L18 18"></path><path d="m14 4 1.25 2.5L18 6"></path><path d="m17 21-3-6h-4"></path><path d="m17 3-3 6 1.5 3"></path><path d="M2 12h6.5L10 9"></path><path d="m20 10-1.5 2 1.5 2"></path><path d="M22 12h-6.5L14 15"></path><path d="m4 10 1.5 2L4 14"></path><path d="m7 21 3-6-1.5-3"></path><path d="m7 3 3 6h4"></path></svg></div><span class="text-lg font-bold tracking-tight">아이스버디</span></a><nav class="hidden items-center gap-6 text-sm font-medium sm:flex"><a class="relative text-muted-foreground transition-colors duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-full after:origin-bottom-right after:scale-x-0 after:bg-arctic-deep after:transition-transform after:duration-300 hover:text-foreground hover:after:origin-bottom-left hover:after:scale-x-100 active" href="/#story" data-status="active" aria-current="page">북극곰 이야기</a><a class="relative text-muted-foreground transition-colors duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-full after:origin-bottom-right after:scale-x-0 after:bg-arctic-deep after:transition-transform after:duration-300 hover:text-foreground hover:after:origin-bottom-left hover:after:scale-x-100 active" href="/#reason" data-status="active" aria-current="page">사라지는 이유</a><a class="relative text-muted-foreground transition-colors duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-full after:origin-bottom-right after:scale-x-0 after:bg-arctic-deep after:transition-transform after:duration-300 hover:text-foreground hover:after:origin-bottom-left hover:after:scale-x-100 active" href="/#impact" data-status="active" aria-current="page">연쇄 영향</a><a class="relative text-muted-foreground transition-colors duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-full after:origin-bottom-right after:scale-x-0 after:bg-arctic-deep after:transition-transform after:duration-300 hover:text-foreground hover:after:origin-bottom-left hover:after:scale-x-100 active" href="/#action" data-status="active" aria-current="page">우리가 할 일</a></nav><button type="button" class="inline-flex cursor-pointer items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:translate-y-0 active:scale-95">참여하기</button></div></header><main class="flex-1"><!--$--><section id="story" class="relative overflow-hidden bg-gradient-to-b from-arctic-sky via-background to-background px-4 pt-16 pb-20 sm:px-6 lg:px-8"><div class="mx-auto max-w-4xl text-center"><div class="reveal is-visible " style="transition-delay:0ms"><div class="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-background/80 px-4 py-1.5 text-sm font-medium text-muted-foreground shadow-sm backdrop-blur-sm transition-transform duration-300 hover:scale-105"><span class="text-lg">🐻‍❄️</span><span>북극곰을 지키는 작은 캠페인</span></div></div><div class="reveal is-visible " style="transition-delay:100ms"><h1 class="text-balance text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">북극곰이 사라지면,<br class="hidden sm:block"><span class="text-arctic-deep">우리의 미래도 위험해져요</span></h1></div><div class="reveal is-visible " style="transition-delay:200ms"><p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">작은 얼음 조각 하나가 무너지면, 결국 우리 모두의 집인 지구도 흔들릴 수 있어요. 북극곰과 함께 지구를 지키는 이야기를 시작해 볼까요?</p></div><div class="reveal is-visible " style="transition-delay:300ms"><div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row"><a class="group inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3.5 text-base font-semibold text-primary-foreground shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-lg active:translate-y-0 active:scale-95 active" href="/#reason" data-status="active" aria-current="page">사라지는 이유 알아보기<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a><a class="inline-flex items-center justify-center gap-2 rounded-full border border-border bg-background px-7 py-3.5 text-base font-semibold text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:bg-accent hover:shadow-md active:translate-y-0 active:scale-95 active" href="/#action" data-status="active" aria-current="page"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hand-heart h-4 w-4" aria-hidden="true"><path d="M11 14h2a2 2 0 0 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 16"></path><path d="m14.45 13.39 5.05-4.694C20.196 8 21 6.85 21 5.75a2.75 2.75 0 0 0-4.797-1.837.276.276 0 0 1-.406 0A2.75 2.75 0 0 0 11 5.75c0 1.2.802 2.248 1.5 2.946L16 11.95"></path><path d="m2 15 6 6"></path><path d="m7 20 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a1 1 0 0 0-2.75-2.91"></path></svg>함께 참여하기</a></div></div><div class="reveal is-visible " style="transition-delay:400ms"><div class="mt-16 flex justify-center"><div class="relative flex h-40 w-40 items-center justify-center rounded-full bg-arctic-ice shadow-xl transition-transform duration-500 hover:scale-105 sm:h-52 sm:w-52"><span class="text-7xl sm:text-8xl">🐻‍❄️</span><div class="absolute -top-3 -right-3 flex h-12 w-12 items-center justify-center rounded-full bg-arctic-sky text-arctic-deep shadow-md transition-transform duration-500 hover:rotate-90"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-snowflake h-6 w-6" aria-hidden="true"><path d="m10 20-1.25-2.5L6 18"></path><path d="M10 4 8.75 6.5 6 6"></path><path d="m14 20 1.25-2.5L18 18"></path><path d="m14 4 1.25 2.5L18 6"></path><path d="m17 21-3-6h-4"></path><path d="m17 3-3 6 1.5 3"></path><path d="M2 12h6.5L10 9"></path><path d="m20 10-1.5 2 1.5 2"></path><path d="M22 12h-6.5L14 15"></path><path d="m4 10 1.5 2L4 14"></path><path d="m7 21 3-6-1.5-3"></path><path d="m7 3 3 6h4"></path></svg></div></div></div></div></div></section><section id="reason" class="px-4 py-20 sm:px-6 lg:px-8"><div class="mx-auto max-w-6xl"><div class="reveal is-visible " style="transition-delay:0ms"><div class="mb-12 text-center"><span class="text-sm font-semibold uppercase tracking-wider text-arctic-deep">Why</span><h2 class="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">북극곰은 왜 사라지고 있을까요?</h2><p class="mt-3 text-muted-foreground">하나씩 차근차근보면, 이유는 그리 어렵지 않아요.</p></div></div><div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"><div class="reveal is-visible " style="transition-delay:0ms"><div class="group relative flex h-full flex-col rounded-2xl border border-border bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg"><div class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-arctic-sky text-arctic-deep transition-all duration-300 group-hover:scale-110 group-hover:bg-arctic-deep group-hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-thermometer-sun h-6 w-6" aria-hidden="true"><path d="M12 2v2"></path><path d="M12 8a4 4 0 0 0-1.645 7.647"></path><path d="M2 12h2"></path><path d="M20 14.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0z"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m6.34 17.66-1.41 1.41"></path></svg></div><h3 class="mb-2 flex items-center gap-2 text-xl font-bold text-card-foreground"><span class="transition-transform duration-300 group-hover:scale-125">🌡️</span>지구가 따뜻해지고 있어요</h3><ul class="flex flex-1 flex-col gap-2 text-muted-foreground"><li class="flex items-start gap-2"><span class="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-arctic-deep"></span><span>공장과 자동차에서 나오는 이산화탄소가 하늘을 두껍게 덮어요.</span></li><li class="flex items-start gap-2"><span class="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-arctic-deep"></span><span>그래서 지구의 열이 빠져나가지 못하고, 북극은 점점 더워져요.</span></li></ul></div></div><div class="reveal is-visible " style="transition-delay:120ms"><div class="group relative flex h-full flex-col rounded-2xl border border-border bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg"><div class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-arctic-sky text-arctic-deep transition-all duration-300 group-hover:scale-110 group-hover:bg-arctic-deep group-hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-snowflake h-6 w-6" aria-hidden="true"><path d="m10 20-1.25-2.5L6 18"></path><path d="M10 4 8.75 6.5 6 6"></path><path d="m14 20 1.25-2.5L18 18"></path><path d="m14 4 1.25 2.5L18 6"></path><path d="m17 21-3-6h-4"></path><path d="m17 3-3 6 1.5 3"></path><path d="M2 12h6.5L10 9"></path><path d="m20 10-1.5 2 1.5 2"></path><path d="M22 12h-6.5L14 15"></path><path d="m4 10 1.5 2L4 14"></path><path d="m7 21 3-6-1.5-3"></path><path d="m7 3 3 6h4"></path></svg></div><h3 class="mb-2 flex items-center gap-2 text-xl font-bold text-card-foreground"><span class="transition-transform duration-300 group-hover:scale-125">🧊</span>얼음이 녹아요</h3><ul class="flex flex-1 flex-col gap-2 text-muted-foreground"><li class="flex items-start gap-2"><span class="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-arctic-deep"></span><span>북극곰은 얼음 위에서 사냥하고 쉬어요.</span></li><li class="flex items-start gap-2"><span class="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-arctic-deep"></span><span>하지만 기온이 올라가면서 얼음이 봄에 일찍 녹고, 가을에 늦게 얼어요.</span></li></ul></div></div><div class="reveal is-visible " style="transition-delay:240ms"><div class="group relative flex h-full flex-col rounded-2xl border border-border bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg"><div class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-arctic-sky text-arctic-deep transition-all duration-300 group-hover:scale-110 group-hover:bg-arctic-deep group-hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-fish h-6 w-6" aria-hidden="true"><path d="M6.5 12c.94-3.46 4.94-6 8.5-6 3.56 0 6.06 2.54 7 6-.94 3.47-3.44 6-7 6s-7.56-2.53-8.5-6Z"></path><path d="M18 12v.5"></path><path d="M16 17.93a9.77 9.77 0 0 1 0-11.86"></path><path d="M7 10.67C7 8 5.58 5.97 2.73 5.5c-1 1.5-1 5 .23 6.5-1.24 1.5-1.24 5-.23 6.5C5.58 18.03 7 16 7 13.33"></path><path d="M10.46 7.26C10.2 5.88 9.17 4.24 8 3h5.8a2 2 0 0 1 1.98 1.67l.23 1.4"></path><path d="m16.01 17.93-.23 1.4A2 2 0 0 1 13.8 21H9.5a5.96 5.96 0 0 0 1.49-3.98"></path></svg></div><h3 class="mb-2 flex items-center gap-2 text-xl font-bold text-card-foreground"><span class="transition-transform duration-300 group-hover:scale-125">🐟</span>먹이를 찾기가 어려워요</h3><ul class="flex flex-1 flex-col gap-2 text-muted-foreground"><li class="flex items-start gap-2"><span class="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-arctic-deep"></span><span>북극곰의 주먹이는 바다표범이에요.</span></li><li class="flex items-start gap-2"><span class="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-arctic-deep"></span><span>얼음이 없으면 바다표범을 잡을 수 없어서, 북극곰은 배고프고 약해져요.</span></li></ul></div></div></div></div></section><section id="impact" class="bg-arctic-sky/50 px-4 py-20 sm:px-6 lg:px-8"><div class="mx-auto max-w-6xl"><div class="reveal is-visible " style="transition-delay:0ms"><div class="mb-12 text-center"><span class="text-sm font-semibold uppercase tracking-wider text-arctic-deep">Chain Reaction</span><h2 class="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">북극곰이 사라지면 어떤 일이 벌어질까요?</h2><p class="mt-3 text-muted-foreground">하나의 변화가 또 다른 변화를 불러와요. 이것을 연쇄 영향이라고 해요.</p></div></div><div class="grid gap-6 lg:grid-cols-3"><div class="reveal is-visible " style="transition-delay:0ms"><div class="group relative flex h-full flex-col rounded-2xl border border-border bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg"><div class="absolute -top-3 -left-3 flex h-10 w-10 items-center justify-center rounded-full bg-arctic-deep text-base font-bold text-primary-foreground shadow-md transition-transform duration-300 group-hover:scale-110">1</div><div class="mb-4 mt-4 flex h-12 w-12 items-center justify-center rounded-xl bg-arctic-sky text-arctic-deep transition-all duration-300 group-hover:scale-110"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart h-6 w-6" aria-hidden="true"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"></path></svg></div><h3 class="mb-2 text-xl font-bold text-card-foreground">북극곰이 힘들어져요</h3><ul class="flex flex-1 flex-col gap-2 text-muted-foreground"><li class="flex items-start gap-2"><span class="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-arctic-deep"></span><span>먹이가 줄어들고, 새끼를 키우기가 어려워져요.</span></li><li class="flex items-start gap-2"><span class="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-arctic-deep"></span><span>오래 헤엄쳐야 해서 체력이 소모되고, 사고로 죽는 북극곰도 늘어요.</span></li></ul></div></div><div class="reveal is-visible " style="transition-delay:150ms"><div class="group relative flex h-full flex-col rounded-2xl border border-border bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg"><div class="absolute -top-3 -left-3 flex h-10 w-10 items-center justify-center rounded-full bg-arctic-deep text-base font-bold text-primary-foreground shadow-md transition-transform duration-300 group-hover:scale-110">2</div><div class="mb-4 mt-4 flex h-12 w-12 items-center justify-center rounded-xl bg-arctic-sky text-arctic-deep transition-all duration-300 group-hover:scale-110"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-scale h-6 w-6" aria-hidden="true"><path d="M12 3v18"></path><path d="m19 8 3 8a5 5 0 0 1-6 0zV7"></path><path d="M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1"></path><path d="m5 8 3 8a5 5 0 0 1-6 0zV7"></path><path d="M7 21h10"></path></svg></div><h3 class="mb-2 text-xl font-bold text-card-foreground">북극의 자연이 균형을 잃어요</h3><ul class="flex flex-1 flex-col gap-2 text-muted-foreground"><li class="flex items-start gap-2"><span class="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-arctic-deep"></span><span>북극곰이 줄면 바다표범과 물고기 수가 변하고, 먹이 사슬이 흔들려요.</span></li><li class="flex items-start gap-2"><span class="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-arctic-deep"></span><span>식물과 작은 생물들이 살기 어려워지면서, 북극 전체의 생태계가 달라져요.</span></li></ul></div></div><div class="reveal is-visible " style="transition-delay:300ms"><div class="group relative flex h-full flex-col rounded-2xl border border-border bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg"><div class="absolute -top-3 -left-3 flex h-10 w-10 items-center justify-center rounded-full bg-arctic-deep text-base font-bold text-primary-foreground shadow-md transition-transform duration-300 group-hover:scale-110">3</div><div class="mb-4 mt-4 flex h-12 w-12 items-center justify-center rounded-xl bg-arctic-sky text-arctic-deep transition-all duration-300 group-hover:scale-110"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe h-6 w-6" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg></div><h3 class="mb-2 text-xl font-bold text-card-foreground">우리의 미래도 달라져요</h3><ul class="flex flex-1 flex-col gap-2 text-muted-foreground"><li class="flex items-start gap-2"><span class="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-arctic-deep"></span><span>북극의 얼음이 녹으면 바닷물이 불어나 해수면이 올라가요.</span></li><li class="flex items-start gap-2"><span class="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-arctic-deep"></span><span>강한 태풍과 이상 기후가 잦아지고, 우리가 사는 땅과 농사에도 영향을 줘요.</span></li></ul></div></div></div><div class="reveal is-visible " style="transition-delay:200ms"><div class="mt-10 hidden items-center justify-center gap-2 text-sm font-medium text-muted-foreground lg:flex"><span>1단계</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right h-4 w-4" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg><span>2단계</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right h-4 w-4" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg><span>3단계</span></div></div></div></section><section id="action" class="px-4 py-20 sm:px-6 lg:px-8"><div class="reveal is-visible " style="transition-delay:0ms"><div class="mx-auto max-w-4xl rounded-3xl bg-gradient-to-br from-arctic-deep to-primary p-8 text-center text-primary-foreground shadow-xl transition-shadow duration-500 hover:shadow-2xl sm:p-12 lg:p-16"><div class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-white/20 transition-transform duration-500 hover:scale-110"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-leaf h-8 w-8" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path></svg></div><h2 class="text-balance text-2xl font-bold sm:text-3xl lg:text-4xl">북극곰을 지키는 것은 큰 곰 하나를 지키는 것만이 아니에요.</h2><p class="mt-4 text-lg leading-relaxed text-white/90">지구의 온도를 조금이라도 낮추고, 얼음을 지키는 것은 결국 우리 모두의 따뜻한 미래를 지키는 일이에요.</p><p class="mt-2 text-base font-medium text-white/90">오늘부터 작은 실천 하나로 북극곰과 지구를 함께 지켜봐요.</p><div class="mt-10 grid gap-4 sm:grid-cols-3"><div class="flex flex-col items-center gap-2 rounded-2xl bg-white/10 p-4 text-center transition-all duration-300 hover:-translate-y-1 hover:bg-white/20"><span class="text-3xl transition-transform duration-300 hover:scale-125">🚲</span><span class="text-sm font-semibold">가까운 거리는 걷거나 자전거</span></div><div class="flex flex-col items-center gap-2 rounded-2xl bg-white/10 p-4 text-center transition-all duration-300 hover:-translate-y-1 hover:bg-white/20"><span class="text-3xl transition-transform duration-300 hover:scale-125">♻️</span><span class="text-sm font-semibold">쓰레기를 줄이고 분리수거</span></div><div class="flex flex-col items-center gap-2 rounded-2xl bg-white/10 p-4 text-center transition-all duration-300 hover:-translate-y-1 hover:bg-white/20"><span class="text-3xl transition-transform duration-300 hover:scale-125">💡</span><span class="text-sm font-semibold">안 쓰는 전기는 꼭 끄기</span></div></div><button type="button" class="mt-10 inline-flex items-center justify-center gap-2 rounded-full bg-white px-8 py-4 text-base font-bold text-arctic-deep shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-lg active:translate-y-0 active:scale-95"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart h-5 w-5" aria-hidden="true"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"></path></svg>캠페인 참여하기</button></div></div></section><!--/$--></main><footer class="border-t border-border bg-background"><div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8"><div class="flex flex-col items-center justify-between gap-4 sm:flex-row"><div class="flex items-center gap-2 text-foreground"><div class="flex h-8 w-8 items-center justify-center rounded-full bg-arctic-sky text-arctic-deep"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-snowflake h-4 w-4" aria-hidden="true"><path d="m10 20-1.25-2.5L6 18"></path><path d="M10 4 8.75 6.5 6 6"></path><path d="m14 20 1.25-2.5L18 18"></path><path d="m14 4 1.25 2.5L18 6"></path><path d="m17 21-3-6h-4"></path><path d="m17 3-3 6 1.5 3"></path><path d="M2 12h6.5L10 9"></path><path d="m20 10-1.5 2 1.5 2"></path><path d="M22 12h-6.5L14 15"></path><path d="m4 10 1.5 2L4 14"></path><path d="m7 21 3-6-1.5-3"></path><path d="m7 3 3 6h4"></path></svg></div><span class="font-semibold">아이스버디</span></div><p class="text-center text-sm text-muted-foreground">북극곰을 지키는 것은 곧 우리의 미래를 지키는 일이에요.</p><div class="flex items-center gap-1 text-sm text-muted-foreground"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart h-4 w-4 text-destructive" aria-hidden="true"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"></path></svg><span>Made with love for Earth</span></div></div></div></footer></div><script type="module" async="" src="/assets/index-BPhT_T7A.js"></script>
+<aside id="lovable-badge" role="complementary" dir="ltr" lang="en" aria-label="Edit with Lovable" class="closing" style="display: none;">
+	<a id="lovable-badge-cta" target="_blank" href="https://lovable.dev/projects/lovp_24xy8e2epq9wpsbq35hrztdtc2?utm_source=lovable-badge" rel="noopener nofollow" aria-label="Edit with Lovable">
+		<span id="lovable-badge-text">Edit with</span>
+		<svg xmlns="http://www.w3.org/2000/svg" width="52" height="16" fill="none" viewBox="0 0 52 16">
+  <path fill="#FCFBF8" fill-rule="evenodd" d="M20.318 5.25c.643 0 1.206.14 1.69.418a2.81 2.81 0 0 1 1.118 1.191c.266.513.4 1.115.4 1.807s-.134 1.296-.4 1.812a2.81 2.81 0 0 1-1.118 1.193c-.484.278-1.047.418-1.69.418s-1.208-.14-1.695-.418a2.85 2.85 0 0 1-1.125-1.193c-.262-.516-.393-1.12-.393-1.812s.131-1.294.393-1.807a2.848 2.848 0 0 1 1.125-1.191c.487-.279 1.052-.418 1.695-.418Zm0 1.425c-.27 0-.504.076-.7.228-.193.147-.34.37-.443.67-.102.295-.153.66-.153 1.093 0 .435.05.801.153 1.1.102.3.25.524.443.676.196.147.43.22.7.22.27 0 .502-.073.694-.22.193-.152.341-.375.443-.67.103-.299.153-.667.153-1.106 0-.65-.112-1.145-.337-1.481a1.08 1.08 0 0 0-.953-.51ZM32.7 5.25c.61 0 1.127.1 1.549.3.422.197.74.48.953.849.217.368.325.809.325 1.32v2.704c0 .29.02.562.062.812.044.245.108.4.19.466V12h-1.935a5.895 5.895 0 0 1-.105-.684 7.745 7.745 0 0 1-.02-.228 2.293 2.293 0 0 1-.151.203c-.205.242-.47.437-.793.584-.32.143-.685.215-1.094.215-.406 0-.77-.08-1.094-.24a1.845 1.845 0 0 1-.756-.682 1.984 1.984 0 0 1-.27-1.045c0-.606.178-1.069.535-1.388.356-.324.87-.534 1.542-.633l1.125-.16c.225-.032.403-.074.534-.123a.622.622 0 0 0 .288-.196.549.549 0 0 0 .093-.327.65.65 0 0 0-.11-.367.702.702 0 0 0-.32-.27c-.14-.07-.31-.105-.51-.105-.32 0-.576.083-.768.251-.193.164-.298.39-.314.676h-1.923c.016-.434.147-.82.393-1.155.25-.34.596-.604 1.039-.792.442-.189.954-.283 1.535-.283Zm.99 3.498a.98.98 0 0 1-.215.14 2.49 2.49 0 0 1-.584.178l-.473.092c-.315.061-.553.156-.713.283-.155.127-.233.305-.233.534 0 .23.084.412.252.547.168.135.383.203.645.203s.494-.058.694-.173c.201-.118.355-.282.461-.49.11-.21.166-.448.166-.714v-.6Zm4.526-2.375c.065-.125.138-.243.221-.349.197-.25.437-.44.719-.571.282-.135.6-.203.952-.203.528 0 .988.138 1.377.412.389.275.688.67.896 1.186.21.512.314 1.12.314 1.824 0 .7-.107 1.309-.32 1.825-.213.512-.518.906-.915 1.18-.393.275-.854.412-1.383.412-.352 0-.667-.062-.946-.184a1.832 1.832 0 0 1-.7-.554 2.2 2.2 0 0 1-.234-.383V12h-1.843V3h1.862v3.373Zm1.284.296c-.274 0-.51.085-.707.253-.192.163-.338.397-.436.7a3.376 3.376 0 0 0-.148 1.05c0 .406.05.759.148 1.058.098.299.243.53.436.694.197.164.433.246.707.246.279 0 .512-.082.7-.246.193-.164.336-.395.43-.694.099-.3.148-.652.148-1.058 0-.405-.05-.757-.147-1.056-.095-.299-.238-.53-.43-.694a1.015 1.015 0 0 0-.7-.253Zm9.416-1.419c.602 0 1.136.131 1.604.393.466.262.829.643 1.086 1.143.263.5.394 1.097.394 1.794 0 .25-.002.449-.006.596H47.51c.018.288.071.538.164.75a1.3 1.3 0 0 0 .491.596c.214.13.465.196.757.196.319 0 .583-.082.792-.246.209-.167.34-.403.393-.706h1.862a2.48 2.48 0 0 1-.485 1.235 2.54 2.54 0 0 1-1.051.805c-.439.188-.949.283-1.53.283-.655 0-1.225-.125-1.708-.375a2.672 2.672 0 0 1-1.13-1.143c-.267-.508-.4-1.137-.4-1.887 0-.712.14-1.327.418-1.843a2.86 2.86 0 0 1 1.155-1.186c.491-.27 1.051-.405 1.678-.405Zm-.044 1.345c-.274 0-.516.068-.725.203a1.29 1.29 0 0 0-.479.59 2.045 2.045 0 0 0-.132.498h2.562a1.873 1.873 0 0 0-.138-.602 1.061 1.061 0 0 0-.418-.516 1.243 1.243 0 0 0-.67-.173Z" clip-rule="evenodd"></path>
+  <path fill="#FCFBF8" d="m26.605 9.995 1.342-4.566h1.924L27.628 12h-2.07l-2.33-6.57h1.98l1.397 4.565Zm-13.013.143h2.256c1.632 0 1.421 1.837 1.418 1.861h-5.603V3h1.93v7.138Zm31.516 1.861h-1.862V3h1.862v8.999Z"></path>
+  <path fill="url(#a)" fill-rule="evenodd" d="M2.7 3c1.492 0 2.7 1.192 2.7 2.663v1.012h.9c1.49 0 2.7 1.192 2.7 2.662S7.791 12 6.3 12H0V5.663C0 4.193 1.209 3 2.7 3Z" clip-rule="evenodd"></path>
+  <defs>
+    <radialGradient id="a" cx="0" cy="0" r="1" gradientTransform="matrix(-1.54236 7.07838 -10.231 -2.15602 4.627 5.022)" gradientUnits="userSpaceOnUse">
+      <stop offset=".106" stop-color="#FE7B02"></stop>
+      <stop offset=".394" stop-color="#FE3F21"></stop>
+      <stop offset=".608" stop-color="#F858BC"></stop>
+      <stop offset=".929" stop-color="#575ECF"></stop>
+    </radialGradient>
+  </defs>
+</svg>
 
-  <header>
-    <div class="logo" onclick="renderChannelList()">▶ YouTube 클론</div>
-  </header>
 
-  <div class="main-container">
-    <!-- 1. 채널 선택 화면 -->
-    <div id="channel-list-view" class="view-section active">
-      <h2 style="margin-bottom: 20px;">채널 목록</h2>
-      <div class="channel-grid" id="channelGrid"></div>
-    </div>
-
-    <!-- 2. 채널 내부 화면 (탭 포함) -->
-    <div id="channel-detail-view" class="view-section">
-      <div class="channel-header">
-        <div class="back-btn" onclick="renderChannelList()">← 뒤로</div>
-        <span id="currentChannelName">채널 이름</span>
-      </div>
-      <div class="tabs">
-        <div class="tab active" id="tab-video" onclick="switchTab('video')">동영상</div>
-        <div class="tab" id="tab-shorts" onclick="switchTab('short')">Shorts</div>
-      </div>
-      
-      <!-- 롱폼 리스트 -->
-      <div id="channel-videos" class="video-grid"></div>
-      
-      <!-- 숏폼 리스트 (사진처럼 그리드로 표시됨) -->
-      <div id="channel-shorts" class="shorts-grid" style="display: none;"></div>
-    </div>
-
-    <!-- 3. 일반 영상 시청 화면 -->
-    <div id="watch-view" class="view-section">
-      <div class="back-btn" style="margin-bottom: 20px;" onclick="backToChannel()">← 채널로 돌아가기</div>
-      <div class="watch-container">
-        <div class="player-wrapper" id="watchPlayer"></div>
-        <h2 id="watchTitle">제목</h2>
-      </div>
-    </div>
-
-    <!-- 4. 쇼츠 시청 화면 (위아래 스크롤) -->
-    <div id="shorts-watch-view" class="view-section">
-      <div class="back-btn" style="position: absolute; top: 20px; left: 20px; z-index: 100;" onclick="backToChannel()">← 닫기</div>
-      <div class="shorts-scroll-container" id="shortsWatchContainer">
-        <!-- 스크롤 가능한 쇼츠들이 여기에 추가됨 -->
-      </div>
-    </div>
-  </div>
-
+	</a>
+	
+	<span id="lovable-badge-divider" aria-hidden="true"></span>
+	
+	<button id="lovable-badge-close" aria-label="Dismiss" title="Dismiss" type="button">
+		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" aria-hidden="true">
+			<path d="M10.646 4.646a.5.5 0 1 1 .707.708L8.707 8l2.646 2.646a.5.5 0 1 1-.707.707L8 8.707l-2.646 2.646a.5.5 0 1 1-.708-.707L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708L8 7.293l2.646-2.647Z"></path>
+		</svg>
+	</button>
+</aside>
 <script>
-  let channelsData = [];
-  let currentChannel = null;
-  let shortsObserver = null;
+	// Don't show the lovable-badge if the page is in an iframe or if it's being rendered by puppeteer (screenshot service)
+	if (window.self !== window.top || navigator.userAgent.includes('puppeteer')) {
+		var badge = document.getElementById('lovable-badge');
+		if (badge) {
+			badge.style.display = 'none';
+		}
+	}
 
-  // 1. 서버에서 데이터 로드
-async function loadData() {
-  try {
-    // 서버가 아니라 정적 파일인 data.json을 불러옴
-    const res = await fetch('./data.json?t=' + new Date().getTime()); 
-    channelsData = await res.json();
-    renderChannelList();
-  } catch (error) {
-    console.error("데이터 로드 실패:", error);
-  }
-}
-
-  // 2. 화면 전환 로직 (재생 중인 영상 정리 포함)
-  function showView(viewId) {
-    document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-    document.getElementById(viewId).classList.add('active');
-    
-    // 일반 시청 화면을 벗어나면 롱폼 영상 초기화
-    if(viewId !== 'watch-view') {
-        document.getElementById('watchPlayer').innerHTML = '';
-    }
-    // 쇼츠 시청 화면을 벗어나면 쇼츠 컨테이너 초기화 (소리 안 겹치게)
-    if(viewId !== 'shorts-watch-view') {
-        document.getElementById('shortsWatchContainer').innerHTML = '';
-        if (shortsObserver) shortsObserver.disconnect(); // 옵저버 해제
-    }
-  }
-
-  // 3. 채널 목록
-  function renderChannelList() {
-    showView('channel-list-view');
-    const grid = document.getElementById('channelGrid');
-    grid.innerHTML = '';
-    channelsData.forEach(channel => {
-      const card = document.createElement('div');
-      card.className = 'channel-card';
-      card.onclick = () => openChannel(channel);
-      card.innerHTML = `
-        <div class="channel-icon">${channel.name.charAt(0)}</div>
-        <h3>${channel.name}</h3>
-        <p style="color:#aaa; font-size:12px; margin-top:8px;">
-          영상 ${channel.videos.length} / 쇼츠 ${channel.shorts.length}
-        </p>
-      `;
-      grid.appendChild(card);
-    });
-  }
-
-  // 4. 채널 진입
-  function openChannel(channel) {
-    currentChannel = channel;
-    showView('channel-detail-view');
-    document.getElementById('currentChannelName').innerText = channel.name;
-    switchTab('short'); // 테스트를 위해 숏폼 탭을 기본으로 열고 싶다면 'short', 아니면 'video' 유지
-  }
-
-  function backToChannel() {
-    if(currentChannel) {
-      showView('channel-detail-view');
-    } else {
-      renderChannelList();
-    }
-  }
-
-  // 5. 탭 전환 로직
-  function switchTab(type) {
-    document.getElementById('tab-video').classList.toggle('active', type === 'video');
-    document.getElementById('tab-shorts').classList.toggle('active', type === 'short');
-
-    const videoArea = document.getElementById('channel-videos');
-    const shortsArea = document.getElementById('channel-shorts');
-
-    if (type === 'video') {
-      videoArea.style.display = 'grid';
-      shortsArea.style.display = 'none';
-      videoArea.innerHTML = '';
-      
-      currentChannel.videos.forEach(video => {
-        const card = document.createElement('div');
-        card.className = 'video-card';
-        card.onclick = () => playVideo(video);
-        card.innerHTML = `
-          <div class="thumbnail">▶</div>
-          <div class="video-title">${video.title}</div>
-        `;
-        videoArea.appendChild(card);
-      });
-    } else {
-      videoArea.style.display = 'none';
-      shortsArea.style.display = 'grid'; // 그리드로 표시
-      shortsArea.innerHTML = '';
-
-      // 사진처럼 쇼츠 썸네일 리스트 렌더링
-      currentChannel.shorts.forEach((short, index) => {
-        const card = document.createElement('div');
-        card.className = 'short-card';
-        card.onclick = () => openShortsPlayer(index); // 👈 썸네일 클릭 시 해당 인덱스로 재생!
-        card.innerHTML = `
-          <div class="short-thumbnail">⚡</div>
-          <div class="short-title">${short.title}</div>
-        `;
-        shortsArea.appendChild(card);
-      });
-    }
-  }
-
-  // 6. 롱폼 시청
-  function playVideo(video) {
-    showView('watch-view');
-    document.getElementById('watchTitle').innerText = video.title;
-    document.getElementById('watchPlayer').innerHTML = `
-      <video controls autoplay style="width: 100%; height: 100%; object-fit: contain;">
-        <source src="${video.url}" type="video/mp4">
-      </video>
-    `;
-  }
-
-  // 7. 숏폼 시청 (위아래 스크롤 모드)
-  function openShortsPlayer(startIndex) {
-    showView('shorts-watch-view');
-    const container = document.getElementById('shortsWatchContainer');
-    container.innerHTML = '';
-
-    // 해당 채널의 모든 쇼츠를 스크롤 컨테이너에 추가
-    currentChannel.shorts.forEach((short, index) => {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'short-player-wrapper';
-      wrapper.id = `short-wrapper-${index}`;
-      
-      wrapper.innerHTML = `
-        <div class="short-player-box">
-          <video class="short-video" controls loop style="width: 100%; height: 100%; object-fit: cover;">
-            <source src="${short.url}" type="video/mp4">
-          </video>
-          <div class="short-info-overlay">
-            <h3>${short.title}</h3>
-          </div>
-        </div>
-      `;
-      container.appendChild(wrapper);
-    });
-
-    // 화면에 보이는 영상만 재생하고 안 보이는 건 멈추는 옵저버 설정
-    setupShortsObserver();
-
-    // 클릭한 영상(startIndex) 위치로 스크롤 점프
-    setTimeout(() => {
-      const targetWrapper = document.getElementById(`short-wrapper-${startIndex}`);
-      if(targetWrapper) {
-        // 즉시 해당 위치로 스크롤 이동
-        container.scrollTo({ top: targetWrapper.offsetTop, behavior: 'instant' });
-      }
-    }, 50); // DOM 렌더링 후 약간의 딜레이
-  }
-
-  // 8. 스크롤 시 자동재생/정지 처리 (Intersection Observer)
-  function setupShortsObserver() {
-    const options = {
-      root: document.getElementById('shortsWatchContainer'),
-      rootMargin: '0px',
-      threshold: 0.6 // 화면에 60% 이상 보여야 재생
-    };
-
-    shortsObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        const video = entry.target.querySelector('.short-video');
-        if (entry.isIntersecting) {
-          video.play().catch(e => console.log("자동재생 방지됨", e));
-        } else {
-          video.pause();
-          video.currentTime = 0; // 안 보일 땐 처음으로 되감기
-        }
-      });
-    }, options);
-
-    document.querySelectorAll('.short-player-wrapper').forEach(wrapper => {
-      shortsObserver.observe(wrapper);
-    });
-  }
-
-  // 초기 실행
-  window.onload = loadData;
+	// Add click event listener to close button with animation
+	var closeButton = document.getElementById('lovable-badge-close');
+	if (closeButton) {
+		closeButton.addEventListener('click', function(event) {
+			event.preventDefault();
+			event.stopPropagation();
+			var badge = document.getElementById('lovable-badge');
+			if (badge) {
+				badge.classList.add('closing');
+				setTimeout(function() {
+					if (badge) {
+						badge.style.display = 'none';
+					}
+				}, 240);
+			}
+		});
+	}
 </script>
-</body>
-</html>
+</body></html>
