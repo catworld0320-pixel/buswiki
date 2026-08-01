@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메인 포털</title>
+    <!-- Pretendard 폰트 -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+    <style>
+        :root {
+            --bg-color: #f3f0ff; /* 연보라색 배경 */
+            --card-bg: #ffffff;
+            --text-main: #2b2b2b;
+            --text-sub: #6b6b6b;
+            --primary: #8b5cf6;
+            --shadow: 0 10px 30px rgba(139, 92, 246, 0.08);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* 상단 타이틀 영역 */
+        .header {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #4c1d95;
+            margin-bottom: 6px;
+        }
+
+        .header p {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+        }
+
+        /* 유지보수가 쉬운 링크 카드 디자인 */
+        .link-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            color: var(--text-main);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(139, 92, 246, 0.1);
+        }
+
+        .link-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.15);
+            border-color: rgba(139, 92, 246, 0.3);
+            background-color: #faf8ff;
+        }
+
+        .link-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .link-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .link-desc {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+        }
+
+        .link-icon {
+            font-size: 1.1rem;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .link-card:hover .link-icon {
+            transform: translateX(4px);
+        }
+
+        /* 푸터 */
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #8b7ca8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 헤더 영역 -->
+        <div class="header">
+            <h1>Quick Links</h1>
+            <p>원하시는 서비스로 바로 이동하세요</p>
+        </div>
+
+        <!-- 
+            ==================================================
+            [유지보수 가이드]
+            박스를 추가하거나 수정하려면 아래 <a class="link-card"> 블록을 복사/편집하세요.
+            - href="링크주소"
+            - link-title 속의 텍스트 수정
+            - link-desc 속의 설명글 수정
+            ==================================================
+        -->
+
+        <!-- 판매샵 바로가기 -->
+        <a href="https://buswiki.xyz/game/gungame" class="link-card" target="_blank" rel="noopener noreferrer">
+            <div class="link-content">
+                <span class="link-title">총게임 바로가기</span>
+                <span class="link-desc">총게임 바로가기</span>
+            </div>
+            <span class="link-icon">→</span>
+        </a>
+
+        <!-- 게임 바로가기 -->
+        <a href="https://buswiki.xyz/game" class="link-card" target="_blank" rel="noopener noreferrer">
+            <div class="link-content">
+                <span class="link-title">test</span>
+                <span class="link-desc">test</span>
+            </div>
+            <span class="link-icon">→</span>
+        </a>
+
+        <!-- 추가 링크가 필요할 경우 아래 주석을 해제하여 사용하세요
+        <a href="추가할주소" class="link-card" target="_blank" rel="noopener noreferrer">
+            <div class="link-content">
+                <span class="link-title">추가 메뉴 이름</span>
+                <span class="link-desc">메뉴에 대한 간단한 설명</span>
+            </div>
+            <span class="link-icon">→</span>
+        </a>
+        -->
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>
