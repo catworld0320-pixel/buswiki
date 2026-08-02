@@ -3,221 +3,691 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Astryx</title>
-    <!-- 부트스트랩 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Pretendard 폰트 -->
-    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
-    
+    <title>최고의 만족감을 선사하다 - Astryx Plus</title>
     <style>
+        /* 기본 스타일 초기화 및 모던 폰트 설정 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --danger-color: #dc2626;
+            --danger-hover: #b91c1c;
+            --success-color: #10b981;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+        }
+
         body {
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-            background-color: #050505;
-            color: #ffffff;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-        }
-        
-        /* 히어로(메인) 섹션 */
-        .hero {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            background: radial-gradient(circle at center, #1a1a2e 0%, #050505 100%);
-            position: relative;
-        }
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .hero p {
-            font-size: 1.2rem;
-            color: #cccccc;
-            margin-bottom: 0.5rem;
-        }
-        .hero strong {
-            color: #ffffff;
-        }
-        
-        /* 본문 섹션 */
-        .content-section {
-            padding: 100px 0;
-            background-color: #0a0a0a;
-        }
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 3rem;
-            color: #ffffff;
-        }
-        
-        /* 카드 디자인 */
-        .custom-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            padding: 35px;
-            height: 100%;
-            transition: all 0.3s ease;
-        }
-        .custom-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(0, 242, 254, 0.1);
-            border-color: rgba(79, 172, 254, 0.4);
-        }
-        .card-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #4facfe;
-            margin-bottom: 5px;
-        }
-        .card-date {
-            font-size: 0.85rem;
-            color: #666;
-            margin-bottom: 25px;
-        }
-        
-        /* 리스트 스타일 */
-        .custom-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .custom-list li {
-            position: relative;
-            padding-left: 1.5rem;
-            margin-bottom: 0.8rem;
-            color: #e0e0e0;
-            line-height: 1.6;
-        }
-        .custom-list li::before {
-            content: "▹";
-            position: absolute;
-            left: 0;
-            color: #00f2fe;
-            font-weight: bold;
-        }
-        
-        /* 판매상점 링크 버튼 */
-        .shop-wrapper {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
+        }
+
+        /* 헤더 네비게이션 바 */
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            height: 100%;
-            text-align: center;
         }
-        .btn-shop {
-            display: inline-block;
-            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-            color: #000;
+
+        .logo {
+            font-size: 22px;
             font-weight: 800;
-            font-size: 1.2rem;
-            padding: 16px 40px;
-            border-radius: 50px;
+            color: var(--primary-color);
             text-decoration: none;
-            margin-top: 15px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(0, 242, 254, 0.3);
+            letter-spacing: -0.5px;
+            cursor: pointer;
+            user-select: none; /* 연속 클릭 시 텍스트 선택 방지 */
         }
-        .btn-shop:hover {
-            transform: scale(1.05);
-            color: #000;
-            box-shadow: 0 8px 30px rgba(0, 242, 254, 0.5);
+
+        .nav-menu {
+            display: flex;
+            gap: 10px;
         }
+
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-color);
+            background-color: #eff6ff;
+        }
+
+        .nav-link.admin-link {
+            color: var(--danger-color);
+        }
+        .nav-link.admin-link:hover, .nav-link.admin-link.active {
+            background-color: #fef2f2;
+        }
+
+        /* 메인 영역 */
+        main {
+            max-width: 1200px;
+            width: 100%;
+            margin: 40px auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            letter-spacing: -0.5px;
+        }
+
+        /* 대시보드 카드 레이아웃 */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        /* 폼 요소 */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #475569;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            background: #fff;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 211, 0.1);
+        }
+
+        /* 버튼류 */
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover { background-color: var(--primary-hover); }
         
-        /* 푸터 */
-        footer {
-            background-color: #000000;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            padding: 40px 0;
+        .btn-secondary { background-color: #f1f5f9; color: #334155; }
+        .btn-secondary:hover { background-color: #e2e8f0; }
+
+        .btn-danger { background-color: var(--danger-color); color: white; }
+        .btn-danger:hover { background-color: var(--danger-hover); }
+
+        .btn-success { background-color: var(--success-color); color: white; }
+        .btn-success:hover { background-color: #059669; }
+
+        .btn-sm { width: auto; padding: 6px 12px; font-size: 13px; }
+
+        /* 공지사항 카드 전용 */
+        .notice-card {
+            border-left: 4px solid var(--primary-color);
+        }
+        .notice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+        .notice-card h3 { font-size: 18px; font-weight: 600; }
+        .notice-date { font-size: 12px; color: var(--text-muted); }
+        .notice-card p { color: var(--text-muted); line-height: 1.6; font-size: 15px; white-space: pre-line; }
+
+        /* 쇼핑 그리드 */
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .product-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+        }
+        .product-icon {
+            font-size: 32px;
+            background: #f8fafc;
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
             text-align: center;
-            color: #555;
-            font-size: 0.95rem;
+            border-radius: 10px;
+            margin-bottom: 16px;
         }
-        
-        /* 모바일 최적화 */
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.8rem; }
-            .hero p { font-size: 1rem; }
-            .content-section { padding: 60px 0; }
+        .product-title { font-size: 19px; font-weight: 700; margin-bottom: 6px; }
+        .product-price { font-size: 16px; color: var(--primary-color); font-weight: 700; margin-bottom: 20px; }
+        .product-card button { margin-top: auto; }
+
+        /* 관리자 목록용 줄 정렬 */
+        .admin-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .admin-list-item:last-child { border-bottom: none; }
+
+        /* 상세정보 팝업 모달창 (Modal) 디자인 */
+        .modal-overlay {
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15);
+            position: relative;
+            animation: modalFade 0.25s ease-out;
+        }
+        @keyframes modalFade {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-close {
+            position: absolute;
+            top: 20px; right: 20px;
+            font-size: 24px; cursor: pointer; color: var(--text-muted);
+        }
+        .modal-icon { font-size: 48px; margin-bottom: 15px; }
+        .modal-title { font-size: 22px; font-weight: 800; margin-bottom: 10px; }
+        .modal-price { font-size: 18px; color: var(--primary-color); font-weight: 700; margin-bottom: 15px; }
+        .modal-desc { color: var(--text-muted); font-size: 15px; line-height: 1.6; background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 20px; white-space: pre-line; }
+
+        footer {
+            background-color: #ffffff;
+            border-top: 1px solid var(--border-color);
+            padding: 20px 0;
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: auto;
         }
     </style>
 </head>
 <body>
 
-    <!-- 메인 타이틀 섹션 -->
-    <section class="hero">
-        <div class="container">
-            <h1>안녕하세요</h1></h1>
-            <p>겁나 평범한 개발자 <strong>Astryx</strong>입니다.</p>
-            <p>모델링만합니다</p>
-        </div>
-    </section>
-
-    <!-- 경력 및 정보 섹션 -->
-    <section class="content-section">
-        <div class="container">
-            <h2 class="section-title">Professional Experience</h2>
-            <div class="row g-4">
-                
-                <!-- 직급 경력 -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="custom-card">
-                        <div class="card-title">직급 경력</div>
-                        <div class="card-date">2026.08.01기준</div>
-                        <ul class="custom-list">
-                            <li>Astryx Plus 대표</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- 개발한 것들 -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="custom-card">
-                        <div class="card-title">만든거</div>
-                        <div class="card-date">2026.08.01기준</div>
-                        <ul class="custom-list">
-                            <li>GreenCity 제작</li>
-                            <li>한국 두번째로 E-Bus7 제작</li>
-                            <li>B800 제작</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- 판매상품 (바로가기 링크로 변경됨) -->
-                <div class="col-lg-4 col-md-12">
-                    <div class="custom-card">
-                        <div class="shop-wrapper">
-                            <div class="card-title" style="font-size: 1.8rem; margin-bottom: 15px;">판매상품</div>
-                            <p style="color: #aaa; margin-bottom: 25px;">값싸고 고급진 다양한 제작 상품들을<br>스토어에서 바로 만나보세요.</p>
-                            <a href="https://buswiki.xyz/shop" class="btn-shop">
-                                상점 바로가기
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
+    <header>
+        <div class="nav-container">
+            <!-- 비밀 관리자 진입을 위한 secretAdminTrigger() 추가 -->
+            <a class="logo" onclick="switchTab('home'); secretAdminTrigger();">Astryx Plus</a>
+            <div class="nav-menu">
+                <span class="nav-link active" id="tab-home" onclick="switchTab('home')">홈(공지)</span>
+                <span class="nav-link" id="tab-shop" onclick="switchTab('shop')">판매목록</span>
+                <span class="nav-link admin-link" id="tab-admin" onclick="switchTab('admin')" style="display:none;">🛠️ 관리자콘솔</span>
             </div>
         </div>
-    </section>
+    </header>
 
-    <!-- 푸터 -->
+    <main>
+        <div id="screen-home" class="screen active">
+            <h2 class="section-title">공지사항</h2>
+            <div id="notice-container">
+                </div>
+        </div>
+
+        <div id="screen-shop" class="screen">
+            <h2 class="section-title">판매 중인 상품</h2>
+            <div id="shop-list-container" class="shop-grid">
+                </div>
+        </div>
+
+        <div id="screen-admin" class="screen">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <h2 class="section-title" style="margin-bottom: 0;">🛠️ 최고 관리자 오프라인/공유형 콘솔</h2>
+                <!-- 세션 종료(로그아웃) 버튼 추가 -->
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn-success btn-sm" onclick="generateShareLink()" style="font-size: 14px; padding: 10px 20px;">🔗 현재 상태 공유 링크 만들기</button>
+                    <button class="btn-secondary btn-sm" onclick="exitAdmin()" style="font-size: 14px; padding: 10px 20px;">🔒 세션 종료</button>
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <div class="card">
+                        <h3 style="font-size:18px; font-weight:700; margin-bottom:16px;">✨ 신규 마켓 상품 등록</h3>
+                        <div class="form-group"><label>상품 명칭</label><input type="text" id="prod-title" placeholder="예: Galaxy S26 Ultra"></div>
+                        <div class="form-group"><label>판매 가격</label><input type="text" id="prod-price" placeholder="예: 1,750,000원"></div>
+                        <div class="form-group"><label>상세 스펙 및 설명</label><textarea id="prod-desc" rows="3" placeholder="화면 크기, CPU 사양 등을 입력하세요."></textarea></div>
+                        <div class="form-group">
+                            <label>아이콘</label>
+<div class="form-group">
+    <label>상품 이미지 업로드</label>
+    <input type="file" id="prod-image" accept="image/*" multiple>
+</div>
+                        </div>
+                        <button onclick="addLiveProduct()">상품 업로드</button>
+                    </div>
+
+                    <div class="card" style="padding: 15px;">
+                        <h3 style="font-size:16px; font-weight:700; margin-bottom:10px;">📋 등록 상품 삭제 제어</h3>
+                        <div id="admin-product-list"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="card">
+                        <h3 style="font-size:18px; font-weight:700; margin-bottom:16px;">📢 공지사항 작성</h3>
+                        <div class="form-group"><label>공지 제목</label><input type="text" id="notice-title" placeholder="공지 제목 기입"></div>
+                        <div class="form-group"><label>공지 본문 내용</label><textarea id="notice-content" rows="6" placeholder="안내 내용을 입력하세요."></textarea></div>
+                        <button onclick="addLiveNotice()">공지 발행</button>
+                    </div>
+
+                    <div class="card" style="padding: 15px;">
+                        <h3 style="font-size:16px; font-weight:700; margin-bottom:10px;">📋 발행된 공지 관리</h3>
+                        <div id="admin-notice-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="detail-modal" class="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="modal-close" onclick="closeModal(null)">&times;</span>
+            <div class="modal-icon" id="modal-icon">📱</div>
+            <div class="modal-title" id="modal-title">상품명</div>
+            <div class="modal-price" id="modal-price">0원</div>
+            <div class="modal-desc" id="modal-desc">상세 설명</div>
+            <button onclick="alert('예약 및 원격 구매 요청이 성공적으로 완료되었습니다.')">즉시 예약/구매하기</button>
+        </div>
+    </div>
+
     <footer>
-        <div class="container">
-            <p>© 2026 Gomdolman. Created with Custom HTML & CSS.</p>
+        <div class="nav-container" style="justify-content:center;">
+            <p>© 2026 Astryx Plus. All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- 부트스트랩 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    /* =======================================================
+       [구글 스프레드시트 연동 URL 설정]
+    ======================================================= */
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx-u8Ga04HjjTWS2IDHP480ANKroeRwSdtTb1yy---Bij0eephJfQ5StluIYhV2vPY1/exec';
+
+    /* =======================================================
+       [초기 기본 데이터 정의 및 구글 시트 데이터 연동 코어]
+    ======================================================= */
+    const DEFAULT_NOTICES = [
+        { id: "n1", title: "🎉 NOVA 모바일 스토어 정식 오픈 안내", content: "안녕하세요! 한층 더 직관적이고 깔끔한 UI로 재탄생한 NOVA 모바일 숍입니다.", date: "2026. 06. 28." }
+    ];
+
+    const DEFAULT_PRODUCTS = [
+        { id: "p1", title: "iPhone 15 Pro Max", price: "1,900,000원", desc: "A17 Pro 칩 탑재, 티타늄 바디 디자인.", icon: "📱" },
+        { id: "p2", title: "Galaxy S24 Ultra", price: "1,698,000원", desc: "갤럭시 AI 탑재 및 2억 화소 카메라.", icon: "📱" }
+    ];
+
+    let notices = [];
+    let products = [];
+    let currentUser = JSON.parse(sessionStorage.getItem('currentUser')) || null;
+
+    async function initData() {
+        try {
+            const response = await fetch(SCRIPT_URL);
+            const data = await response.json();
+            
+            products = data.products && data.products.length > 0 ? data.products : DEFAULT_PRODUCTS;
+            notices = data.notices && data.notices.length > 0 ? data.notices : DEFAULT_NOTICES;
+            
+            console.log("구글 스프레드시트 연동 성공!");
+        } catch (error) {
+            console.error("데이터를 불러오지 못했습니다. 로컬 백업을 로드합니다.", error);
+            loadLocalBackup();
+        }
+        updateUI();
+    }
+
+    function loadLocalBackup() {
+        notices = JSON.parse(localStorage.getItem('nova_notices')) || DEFAULT_NOTICES;
+        products = JSON.parse(localStorage.getItem('nova_products')) || DEFAULT_PRODUCTS;
+    }
+
+    function saveData() {
+        localStorage.setItem('nova_notices', JSON.stringify(notices));
+        localStorage.setItem('nova_products', JSON.stringify(products));
+        updateUI();
+    }
+
+    function generateShareLink() {
+        const dataObj = { notices, products };
+        const jsonStr = JSON.stringify(dataObj);
+        const encoded = btoa(encodeURIComponent(jsonStr));
+        const shareUrl = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
+        
+        navigator.clipboard.writeText(shareUrl).then(() => {
+            alert("✨ 현재 마켓 상태(상품 목록, 공지사항)가 포함된 공유 링크가 복사되었습니다!");
+        }).catch(err => {
+            prompt("아래 주소를 복사해서 다른 사람에게 공유하세요:", shareUrl);
+        });
+    }
+
+    function updateUI() {
+        // 1. 공지사항 렌더링
+        const noticeContainer = document.getElementById('notice-container');
+        if(notices.length === 0) {
+            noticeContainer.innerHTML = '<p style="text-align:center; padding:40px; color:var(--text-muted);">발행된 공지사항이 없습니다.</p>';
+        } else {
+            noticeContainer.innerHTML = [...notices].reverse().map(n => `
+                <div class="card notice-card">
+                    <div class="notice-header">
+                        <h3>${n.title}</h3>
+                        <span class="notice-date">${n.date}</span>
+                    </div>
+                    <p>${n.content}</p>
+                </div>
+            `).join('');
+        }
+
+        // 2. 쇼핑 목록 렌더링
+        const shopContainer = document.getElementById('shop-list-container');
+        if(products.length === 0) {
+            shopContainer.innerHTML = '<p style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);">현재 판매중인 상품이 없습니다.</p>';
+        } else {
+            shopContainer.innerHTML = products.map(p => {
+                const firstImageUrl = p.icon.split(',')[0]; 
+                
+                // 기존 데이터(📱)와 진짜 이미지 URL을 구분해서 에러 방지
+                const isUrl = firstImageUrl.startsWith('http');
+                const imageTag = isUrl 
+                    ? `<img src="${firstImageUrl}" alt="상품이미지" style="width:100%; height:100%; object-fit:contain; border-radius:10px;">` 
+                    : `<span style="font-size:40px;">${firstImageUrl}</span>`;
+
+                return `
+                    <div class="product-card">
+                        <div class="product-icon" style="background:transparent; height:150px; display:flex; justify-content:center; align-items:center;">
+                            ${imageTag}
+                        </div>
+                        <div class="product-title">${p.title}</div>
+                        <div class="product-price">${p.price}</div>
+                        <button class="btn-secondary" onclick="openDetail('${p.id}')">상세 정보</button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 3. 관리자 상품 관리 목록 렌더링
+        const adminProdList = document.getElementById('admin-product-list');
+        adminProdList.innerHTML = products.map(p => `
+            <div class="admin-list-item">
+                <span style="font-weight:600; font-size:14px;">${p.title}</span>
+                <button class="btn-danger btn-sm" onclick="deleteProduct('${p.id}')">삭제</button>
+            </div>
+        `).join('');
+
+        // 4. 관리자 공지 관리 목록 렌더링
+        const adminNoticeList = document.getElementById('admin-notice-list');
+        adminNoticeList.innerHTML = notices.map(n => `
+            <div class="admin-list-item">
+                <span style="font-weight:600; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:200px;">${n.title}</span>
+                <button class="btn-danger btn-sm" onclick="deleteNotice('${n.id}')">삭제</button>
+            </div>
+        `).join('');
+    } // <-- 빠져있던 updateUI() 닫는 괄호 복구 완료
+
+    const IMGBB_API_KEY = '56b53277badd6eb6bec38420d4b37727';
+
+    async function addLiveProduct() {
+        const title = document.getElementById('prod-title').value.trim();
+        const price = document.getElementById('prod-price').value.trim();
+        const desc = document.getElementById('prod-desc').value.trim();
+        const imageInput = document.getElementById('prod-image');
+
+        if(!title || !price) return alert('상품명과 가격을 올바르게 채워주세요.');
+        if(imageInput.files.length === 0) return alert('상품 이미지를 1장 이상 첨부해주세요.');
+
+        const btn = event.target;
+        const originalBtnText = btn.innerText;
+        btn.innerText = "이미지 업로드 중...";
+        btn.disabled = true;
+
+        try {
+            const uploadPromises = Array.from(imageInput.files).map(async (file) => {
+                const formData = new FormData();
+                formData.append('image', file);
+                
+                const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                if (!data.success) throw new Error('업로드 실패');
+                
+                return data.data.display_url; 
+            });
+
+            const uploadedUrls = await Promise.all(uploadPromises);
+            const finalIconString = uploadedUrls.join(',');
+
+            const newProduct = { 
+                id: 'p_' + Date.now(), 
+                title: title, 
+                price: price, 
+                desc: desc, 
+                icon: finalIconString 
+            };
+
+            await fetch(SCRIPT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(newProduct)
+            });
+
+            products.push(newProduct);
+            saveData();
+
+            alert('상품과 여러 장의 이미지가 성공적으로 등록되었습니다!');
+
+            document.getElementById('prod-title').value = '';
+            document.getElementById('prod-price').value = '';
+            document.getElementById('prod-desc').value = '';
+            imageInput.value = '';
+
+        } catch (error) {
+            console.error('업로드 에러:', error);
+            alert('이미지 업로드 중 문제가 발생했습니다.');
+        } finally {
+            btn.innerText = originalBtnText;
+            btn.disabled = false;
+        }
+    }
+
+    // <-- 지워졌던 deleteProduct 함수 복구 완료
+    function deleteProduct(id) {
+        if(confirm('이 상품을 카탈로그에서 지우시겠습니까?')) {
+            products = products.filter(p => p.id !== id);
+            saveData();
+        }
+    }
+
+    function addLiveNotice() {
+        const title = document.getElementById('notice-title').value.trim();
+        const content = document.getElementById('notice-content').value.trim();
+
+        if(!title || !content) return alert('공지 제목과 본문 내용을 채워주세요.');
+
+        const dateStr = new Date().toLocaleDateString('ko-KR', {year: 'numeric', month: '2-digit', day: '2-digit'});
+        notices.push({ id: 'n_' + Date.now(), title, content, date: dateStr });
+        saveData();
+
+        alert('새로운 공지사항이 추가되었습니다.');
+        document.getElementById('notice-title').value = '';
+        document.getElementById('notice-content').value = '';
+    }
+
+    function deleteNotice(id) {
+        if(confirm('이 공지사항 게시글을 파기합니까?')) {
+            notices = notices.filter(n => n.id !== id);
+            saveData();
+        }
+    }
+
+    function openDetail(id) {
+        const item = products.find(p => p.id === id);
+        if(!item) return;
+
+        const imageUrls = item.icon.split(','); 
+        
+        // 기존 데이터(이모지)와 다중 이미지 호환 렌더링
+        const imagesHtml = imageUrls.map(url => {
+            if(url.startsWith('http')) {
+                return `<img src="${url}" style="width:100%; max-height:200px; object-fit:contain; border-radius:8px; margin-bottom:10px;">`;
+            } else {
+                return `<div style="font-size: 64px; margin-bottom:20px;">${url}</div>`;
+            }
+        }).join('');
+
+        document.getElementById('modal-icon').innerHTML = `<div style="display:flex; flex-direction:column; align-items:center;">${imagesHtml}</div>`;
+        document.getElementById('modal-title').innerText = item.title;
+        document.getElementById('modal-price').innerText = item.price;
+        document.getElementById('modal-desc').innerText = item.desc || '상세정보가 제공되지 않는 상품입니다.';
+        
+        document.getElementById('detail-modal').style.display = 'flex';
+    }
+
+    function closeModal() { document.getElementById('detail-modal').style.display = 'none'; }
+
+    function switchTab(targetId) {
+        document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+
+        const screen = document.getElementById(`screen-${targetId}`);
+        if(screen) screen.classList.add('active');
+
+        const tab = document.getElementById(`tab-${targetId}`);
+        if(tab) tab.classList.add('active');
+
+        if(targetId === 'admin' && (!currentUser || currentUser.role !== 'admin')) {
+            alert('접근위반');
+            switchTab('home');
+        }
+        window.scrollTo({top: 0});
+    }
+
+    let logoClickCount = 0;
+    let logoClickTimer = null;
+
+    function secretAdminTrigger() {
+        logoClickCount++;
+        
+        if (logoClickTimer) clearTimeout(logoClickTimer);
+        logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 2000);
+
+        if (logoClickCount === 5) {
+            logoClickCount = 0;
+            const pw = prompt("System Command:"); 
+            
+            if (pw === "Astryxadmin!^^") { 
+                sessionStorage.setItem('currentUser', JSON.stringify({ id: 'admin', role: 'admin' }));
+                alert('확인');
+                syncAccountUI();
+                switchTab('admin');
+            } else if (pw !== null) {
+                alert('error');
+            }
+        }
+    }
+
+    function syncAccountUI() {
+        currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+        const adminTab = document.getElementById('tab-admin');
+
+        if (!currentUser || currentUser.role !== 'admin') {
+            adminTab.style.display = 'none';
+        } else {
+            adminTab.style.display = 'inline-block';
+        }
+    }
+
+    function exitAdmin() {
+        sessionStorage.removeItem('currentUser');
+        alert('관리자 세션이 종료되었습니다.');
+        syncAccountUI();
+        switchTab('home');
+    }
+
+    // 초기 구동
+    initData();
+    syncAccountUI();
+</script>
 </body>
 </html>
