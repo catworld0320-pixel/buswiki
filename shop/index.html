@@ -5,7 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>최고의 만족감을 선사하다 - Astryx Plus</title>
     <style>
-        /* 기본 스타일 초기화 및 모던 폰트 설정 */
+        .main-shortcut-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: all 0.2s ease;
+        }
+
+        .main-shortcut-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
         * {
             margin: 0;
             padding: 0;
@@ -371,6 +391,7 @@
             <button onclick="alert('예약 및 원격 구매 요청이 성공적으로 완료되었습니다.')">즉시 예약/구매하기</button>
         </div>
     </div>
+    <a href="https://buswiki.xyz" class="main-shortcut-btn">메인화면 바로가기</a>
 
     <footer>
         <div class="nav-container" style="justify-content:center;">
