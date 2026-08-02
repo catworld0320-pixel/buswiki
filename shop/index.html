@@ -3,8 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>최고의 만족감을 선사하다 - Astryx Plus</title>
+    <title>최상의 품질로 - Astryx Plus</title>
     <style>
+/* =========================================
+   상세 모달창 이미지 가로 슬라이더(Carousel) 
+========================================= */
+.slider-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory; /* 스크롤 시 이미지 단위로 딱 맞게 멈춤 */
+    gap: 15px;
+    padding-bottom: 15px;
+    width: 100%;
+    -webkit-overflow-scrolling: touch; /* 모바일 부드러운 스크롤 지원 */
+}
+
+.slider-item {
+    flex: 0 0 100%; /* 한 화면에 이미지 한 장씩 꽉 차게 설정 */
+    scroll-snap-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.slider-item img {
+    width: 100%;
+    max-height: 250px; /* 세로 길이를 제한하여 한눈에 들어오게 함 */
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+/* 슬라이더 스크롤바 디자인 (깔끔하게 표시) */
+.slider-container::-webkit-scrollbar {
+    height: 6px;
+}
+.slider-container::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+.slider-container::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+.slider-container::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* =========================================
+   공지사항 바둑판(Grid) 배열 (세로 스크롤 방지)
+========================================= */
+#notice-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
         .main-shortcut-btn {
             position: fixed;
             bottom: 20px;
@@ -622,28 +674,29 @@
         }
     }
 
-    function openDetail(id) {
-        const item = products.find(p => p.id === id);
-        if(!item) return;
+function openDetail(id) {
+    const item = products.find(p => p.id === id);
+    if(!item) return;
 
-        const imageUrls = item.icon.split(','); 
-        
-        // 기존 데이터(이모지)와 다중 이미지 호환 렌더링
-        const imagesHtml = imageUrls.map(url => {
-            if(url.startsWith('http')) {
-                return `<img src="${url}" style="width:100%; max-height:200px; object-fit:contain; border-radius:8px; margin-bottom:10px;">`;
-            } else {
-                return `<div style="font-size: 64px; margin-bottom:20px;">${url}</div>`;
-            }
-        }).join('');
+    const imageUrls = item.icon.split(','); 
+    
+    // 슬라이더 아이템으로 렌더링하도록 변경
+    const imagesHtml = imageUrls.map(url => {
+        if(url.startsWith('http')) {
+            return `<div class="slider-item"><img src="${url}" alt="상품 상세 이미지"></div>`;
+        } else {
+            return `<div class="slider-item"><div style="font-size: 64px;">${url}</div></div>`;
+        }
+    }).join('');
 
-        document.getElementById('modal-icon').innerHTML = `<div style="display:flex; flex-direction:column; align-items:center;">${imagesHtml}</div>`;
-        document.getElementById('modal-title').innerText = item.title;
-        document.getElementById('modal-price').innerText = item.price;
-        document.getElementById('modal-desc').innerText = item.desc || '상세정보가 제공되지 않는 상품입니다.';
-        
-        document.getElementById('detail-modal').style.display = 'flex';
-    }
+    // modal-icon 영역에 슬라이더 컨테이너 적용
+    document.getElementById('modal-icon').innerHTML = `<div class="slider-container">${imagesHtml}</div>`;
+    document.getElementById('modal-title').innerText = item.title;
+    document.getElementById('modal-price').innerText = item.price;
+    document.getElementById('modal-desc').innerText = item.desc || '상세정보가 제공되지 않는 상품입니다.';
+    
+    document.getElementById('detail-modal').style.display = 'flex';
+}
 
     function closeModal() { document.getElementById('detail-modal').style.display = 'none'; }
 
