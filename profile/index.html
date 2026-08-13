@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>포트폴리오</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        /* 상단 고정 네비게이션 바 */
+    .top-bar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(22, 27, 34, 0.85);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid #30363d;
+        margin-bottom: 25px;
+        padding: 12px 0;
+    }
+
+    .nav-links {
+        max-width: 850px;
+        margin: 0 auto;
+        display: flex;
+        gap: 15px;
+        padding: 0 10px;
+        overflow-x: auto; /* 화면이 좁을 때 가로 스크롤 가능 */
+    }
+
+    .nav-links a {
+        color: #c9d1d9;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 600;
+        padding: 6px 12px;
+        border-radius: 6px;
+        background: #21262d;
+        border: 1px solid #30363d;
+        white-space: nowrap;
+        transition: all 0.2s ease;
+    }
+
+    .nav-links a:hover {
+        color: #58a6ff;
+        border-color: #58a6ff;
+        background: #161b22;
+    }
+
+    /* 스크롤 시 상단바에 제목이 가리지 않도록 위치 조정 */
+    html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 70px;
+    }
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        /* 1. 딥 다크 모드 배경 */
+        background-color: #0d0f12;
+        background-image: 
+            linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        background-size: 40px 40px;
+        background-attachment: fixed;
+        color: #e1e4e8; /* 글자색을 어둡지 않게 밝은 회색으로 */
+        line-height: 1.7;
+        padding: 40px 10px;
+    }
+
+    /* 2. 중앙 컨테이너도 어둡게 변경 (하얀 상자 제거) */
+    .portfolio-container {
+        max-width: 850px;
+        margin: 0 auto;
+        background: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 12px;
+        padding: 35px 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    /* 3. 헤더 및 마크다운 폰트/선 색상 다크 모드에 맞게 수정 */
+    .content h1 { 
+        font-size: 1.8rem; 
+        border-bottom: 2px solid #30363d; 
+        padding-bottom: 10px; 
+        margin: 25px 0 20px 0; 
+        color: #f0f6fc; 
+    }
+    .content h1:first-child { margin-top: 0; }
+
+    .content h2 { 
+        font-size: 1.35rem; 
+        border-bottom: 1px solid #21262d; 
+        padding-bottom: 8px; 
+        margin: 30px 0 15px 0; 
+        color: #58a6ff; /* 카테고리 헤더에 스포티한 블루 포인트 */
+    }
+
+    .content h3 { font-size: 1.15rem; margin: 20px 0 10px 0; color: #f0f6fc; }
+    .content p { margin-bottom: 12px; font-size: 0.98rem; color: #8b949e; word-break: break-all; }
+    .content strong { color: #f0f6fc; } /* 모델링 제목 굵은글씨를 밝게 */
+
+    .content ul, .content ol { margin: 10px 0 15px 25px; color: #c9d1d9; }
+    .content li { margin-bottom: 4px; }
+    .content blockquote { border-left: 4px solid #1f6beb; padding-left: 12px; color: #8b949e; margin: 15px 0; background: #0d1117; }
+
+    /* 4. 이미지 프레임 및 테두리 세련되게 변경 */
+    .image-wrapper {
+        position: relative;
+        margin: 15px 0 8px 0;
+        background-color: #010409;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #30363d;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .image-wrapper img {
+        width: 100%;
+        height: auto;
+        display: block;
+        cursor: pointer;
+        transition: transform 0.25 ease, opacity 0.25s ease;
+    }
+
+    /* 이미지에 마우스를 올렸을 때 은은하게 빛나는 효과 */
+    .image-wrapper img:hover {
+        opacity: 0.9;
+        transform: scale(1.005);
+    }
+
+    /* 사진 우상단 번호 배지 */
+    .number-badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: rgba(0, 0, 0, 0.75);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #58a6ff;
+        font-size: 0.8rem;
+        font-weight: bold;
+        padding: 3px 9px;
+        border-radius: 4px;
+        pointer-events: none;
+        backdrop-filter: blur(4px);
+    }
+    </style>
+</head>
+<body>
+        <!-- 상단 고정 탑바 -->
+    <nav class="top-bar">
+        <div class="nav-links">
+            <a href="#section-vehicles">탈것</a>
+            <a href="#section-maps">맵 & 렌더링</a>
+            <a href="#section-props">내부 프롭 & 디테일 파츠</a>
+            <a href="#section-career">경력</a>
+        </div>
+    </nav>
+
+    <div class="portfolio-container">
+        <main id="app" class="content"></main>
+    </div>
+
+    <script>
+        const images = {
+            "pic1": "images/2026-08-13_211057.png",
+            "pic2": "images/2026-07-20_232546.png",
+            "pic3": "images/2026-04-11_200347.png",
+            "pic4": "images/2025-02-01_091236.png",
+            "pic5": "images/2026-07-25_115351.png",
+            "pic6": "images/2026-05-09_184724.png",
+            "pic7": "images/2026-05-23_171122.png",
+            "pic8": "images/2026-05-19_230744.png",
+            "pic9": "images/2026-08-02_194607.png",
+            "pic10": "images/2026-08-04_192945.png",
+            "pic11": "images/2026-08-06_163002.png",
+            "pic12": "images/2026-08-07_135228.png",
+            "pic13": "images/2026-08-06_230920.png",
+            "pic14": "images/2026-08-06_202052.png",
+            "pic15": "images/2026-08-13_204401.png",
+            "pic16": "images/2026-04-11_200414.png",
+            "pic17": "images/2026-04-13_185656.png",
+            "pic18": "images/2026-04-15_174234.png",
+            "pic19": "images/2026-05-02_230513.png",
+            "pic20": "images/2026-07-27_225658.png",
+                }
+const markdownText = `
+# 3D 모델링 & 프롭 포트폴리오
+
+<a id="section-vehicles"></a>
+## 탈것
+**NSAC 미개선형**
+<pic1>
+2026.08.13 제작
+
+**NSAC LOW**
+<pic18>
+2026.04.15 제작
+
+**SMART 110E 내부**
+<pic2>
+2026.07.20 제작
+
+**1호선 큐브**
+<pic3>
+2026.04.11 제작
+
+**bs090**
+<pic13>
+2026.08.06 제작
+
+**byd e-bus7**
+<pic9>
+2026.08.02 제작
+
+**부산4호선**
+<pic10>
+2026.08.04 제작
+
+**5호선 4차분**
+<pic14>
+2026.08.06 제작
+
+**그랜져 GN7**
+<pic15>
+2026.08.13 제작
+
+**뱀눈이**
+<pic16>
+2026.04.11 제작
+
+**KTX**
+<pic17>
+2026.04.13 제작
+
+<a id="section-maps"></a>
+## 맵 & 렌더링
+**울진종합터미널**
+<pic4>
+2025.02.01 제작
+
+<a id="section-props"></a>
+## 내부 프롭 & 디테일 파츠
+**티머니 단말기**
+<pic5>
+
+**티머니 운전자단말기**
+<pic12>
+2026.08.07 제작
+
+**이즐 단말기**
+<pic19>
+2026.05.02 제작
+
+**코토 격벽**
+<pic6>
+
+**NSAC 전용 손잡이**
+<pic7>
+2026.05.24 제작
+
+**LG 천장 환풍기**
+<pic8>
+
+**방향지시등**
+<pic11>
+2026.08.06 제작
+
+**OMEN16 게이밍노트북**
+<pic20>
+2026.07.27 제작
+
+<a id="section-career"></a>
+## 경력
+- 현) 사람종합판매소 모델러
+- 현) 부산도시철도 개발자
+- 전) 6개월간 누적이용자 1.2만명정도 되는 사이트 운영경험 有
+- 전) 용원시버스시뮬레이터 개발진
+- 전) 세종버스시뮬레이터 개발자
+- 전) H스토어 모델링관련 입점
+- 전) 성화철도공사 개발자
+- 전) 용원시버스시뮬레이터 개발자
+- 전) 서울버스시뮬레이터 개발자
+- 전) 동해선 개발자
+- 전) 철도청 관계인
+- 전) 김포시 인턴개발자
+- 전) 의정부버스시뮬레이터 개발자
+- 전) 버스모델스토어 고위직
+- 전) 버스매매단지 개발진
+
+## 마지막 한마디
+현재 일자리를 구직하고있습니다. 관심있으신 분은 디스코드 <@1463032899224731866> 연락 부탁드립니다.
+위에서 보이다시피 현재 일하고있는곳은 없지만 과거경력, 개발경력등 빵빵합니다. 많은 관심 부탁드리겠습니다.
+`;
+
+
+
+        // =========================================================
+        // 3. 변환 및 출력 로직
+        // =========================================================
+        // <pic1>, <pic2> 태그를 HTML 이미지 태그로 사전 교체
+        let parsedText = markdownText.replace(/<pic(\d+)>/gi, (match, p1) => {
+            const picKey = "pic" + p1;
+            const imgUrl = images[picKey] || '';
+            return `
+<div class="image-wrapper">
+    <span class="number-badge">${p1}</span>
+    <a href="${imgUrl}" target="_blank" title="원본 이미지 보기">
+        <img src="${imgUrl}" alt="사진 ${p1}">
+    </a>
+</div>
+`;
+        });
+
+        // marked 라이브러리를 사용하여 완벽한 마크다운 HTML로 변환
+        document.getElementById('app').innerHTML = marked.parse(parsedText);
+    </script>
+</body>
+</html>
