@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux Terminal</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: #0c0c0c;
+            color: #4af626;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 15px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        #terminal {
+            flex: 1;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .line { margin-bottom: 4px; line-height: 1.4; }
+        .input-line { display: flex; align-items: center; }
+        .prompt { color: #3b90ff; font-weight: bold; margin-right: 8px; }
+        .path { color: #f1fa8c; }
+        input {
+            background: transparent;
+            border: none;
+            color: #4af626;
+            font-family: inherit;
+            font-size: 1rem;
+            flex: 1;
+            outline: none;
+        }
+        .output { color: #cccccc; margin-bottom: 6px; }
+        .error { color: #ff5555; }
+    </style>
+</head>
+<body>
+    <div id="terminal">
+        <div class="line output">Linux Web Terminal v1.0.0 (x86_64-pc-linux-gnu)<br>Type 'help' for a list of available commands.</div>
+    </div>
+    <div class="input-line">
+        <span class="prompt" id="prompt-text">user@rinux:<span class="path">~</span>$</span>
+        <input type="text" id="cmd-input" autofocus autocomplete="off" spellcheck="false">
+    </div>
+
+    <script>
+        const terminal = document.getElementById('terminal');
+        const input = document.getElementById('cmd-input');
+        const promptText = document.getElementById('prompt-text');
+
+        let history = [];
+        let historyIndex = -1;
+
+        // Virtual File System
+        const fs = {
+            "home": {
+                "user": {
+                    "readme.txt": "Welcome to Rinux Terminal!",
+                    "projects": {}
+                }
+            }
+        };
+        let currentPath = ["home", "user"];
+
+        function getPromptPath() {
+            if (currentPath.join('/') === "home/user") return "~";
+            return "/" + currentPath.slice(2).join('/');
+        }
+
+        function getCurrentDir() {
+            let dir = fs;
+            for (let p of currentPath) {
+                dir = dir[p];
+            }
+            return dir;
+        }
+
+        function updatePrompt() {
+            promptText.innerHTML = `user@rinux:<span class="path">${getPromptPath()}</span>$`;
+        }
+
+        document.body.addEventListener('click', () => input.focus());
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const cmdLine = input.value.trim();
+                if (cmdLine) history.push(cmdLine);
+                historyIndex = history.length;
+
+                printLine(`${promptText.innerText} ${cmdLine}`);
+                executeCommand(cmdLine);
+                input.value = '';
+                terminal.scrollTop = terminal.scrollHeight;
+            } else if (e.key === 'ArrowUp') {
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    input.value = history[historyIndex];
+                }
+            } else if (e.key === 'ArrowDown') {
+                if (historyIndex < history.length - 1) {
+                    historyIndex++;
+                    input.value = history[historyIndex];
+                } else {
+                    historyIndex = history.length;
+                    input.value = '';
+                }
+            }
+        });
+
+        function printLine(text, isError = false) {
+            const div = document.createElement('div');
+            div.className = isError ? 'line error' : 'line output';
+            div.innerText = text;
+            terminal.appendChild(div);
+        }
+
+        function executeCommand(cmdLine) {
+            const parts = cmdLine.split(' ').filter(p => p !== '');
+            if (parts.length === 0) return;
+            const cmd = parts[0].toLowerCase();
+            const args = parts.slice(1);
+
+            const dir = getCurrentDir();
+
+            switch (cmd) {
+                case 'help':
+                    printLine("Available commands: ls, cd, pwd, cat, touch, mkdir, clear, whoami, date, echo, help");
+                    break;
+                case 'clear':
+                    terminal.innerHTML = '';
+                    break;
+                case 'pwd':
+                    printLine('/' + currentPath.join('/'));
+                    break;
+                case 'whoami':
+                    printLine("user");
+                    break;
+                case 'date':
+                    printLine(new Date().toString());
+                    break;
+                case 'echo':
+                    printLine(args.join(' '));
+                    break;
+                case 'ls':
+                    const items = Object.keys(dir).map(k => typeof dir[k] === 'object' ? k + '/' : k);
+                    printLine(items.join('   ') || '(directory empty)');
+                    break;
+                case 'mkdir':
+                    if (!args[0]) return printLine("mkdir: missing operand", true);
+                    if (dir[args[0]]) return printLine(`mkdir: cannot create directory '${args[0]}': File exists`, true);
+                    dir[args[0]] = {};
+                    break;
+                case 'touch':
+                    if (!args[0]) return printLine("touch: missing file operand", true);
+                    if (!dir[args[0]]) dir[args[0]] = "";
+                    break;
+                case 'cat':
+                    if (!args[0]) return printLine("cat: missing file operand", true);
+                    if (dir[args[0]] === undefined) return printLine(`cat: ${args[0]}: No such file or directory`, true);
+                    if (typeof dir[args[0]] === 'object') return printLine(`cat: ${args[0]}: Is a directory`, true);
+                    printLine(dir[args[0]]);
+                    break;
+                case 'cd':
+                    if (!args[0] || args[0] === '~') {
+                        currentPath = ["home", "user"];
+                    } else if (args[0] === '..') {
+                        if (currentPath.length > 0) currentPath.pop();
+                    } else {
+                        const target = dir[args[0]];
+                        if (target && typeof target === 'object') {
+                            currentPath.push(args[0]);
+                        } else if (target) {
+                            printLine(`bash: cd: ${args[0]}: Not a directory`, true);
+                        } else {
+                            printLine(`bash: cd: ${args[0]}: No such file or directory`, true);
+                        }
+                    }
+                    updatePrompt();
+                    break;
+                default:
+                    printLine(`bash: ${cmd}: command not found`, true);
+            }
+        }
+    </script>
+</body>
+</html>
