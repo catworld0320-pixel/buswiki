@@ -643,7 +643,33 @@ TYPE      텍스트 파일의 내용을 표시합니다.`;
                         printLine("Python 엔진을 로드하는 중입니다. 잠시 후 다시 시도하세요.");
                         return;
                     }
-                    if (args[0]) {
+                    
+                    if (args.length > 0) {
+                        // 1) python -m <모듈명> 처리 (예: python -m rich)
+                        if (args[0] === '-m' && args[1]) {
+                            const moduleName = args[1];
+                            try {
+                                pyodide.setStdout({ batched: (str) => printLine(str) });
+                                await pyodide.runPythonAsync(`import runpy; runpy.run_module('${moduleName}', run_name='__main__')`);
+                            } catch (err) {
+                                printLine(`Python Error: ${err.message}`);
+                            }
+                            return;
+                        }
+
+                        // 2) python -c "<코드>" 처리 (예: python -c "import art; art.tprint('Hello')")
+                        if (args[0] === '-c' && args.slice(1).length > 0) {
+                            const code = args.slice(1).join(' ').replace(/^["']|["']$/g, '');
+                            try {
+                                pyodide.setStdout({ batched: (str) => printLine(str) });
+                                await pyodide.runPythonAsync(code);
+                            } catch (err) {
+                                printLine(`Python Error: ${err.message}`);
+                            }
+                            return;
+                        }
+
+                        // 3) python <파일명.py> 처리
                         const targetFile = dir[args[0]] || fs["C:"]["Users"]["OMEN"]["Downloads"][args[0]];
                         if (targetFile) {
                             const code = typeof targetFile === 'object' ? targetFile.content : targetFile;
@@ -657,6 +683,7 @@ TYPE      텍스트 파일의 내용을 표시합니다.`;
                             printLine(`python: can't open file '${args[0]}': No such file or directory`);
                         }
                     } else {
+                        // 대화형 REPL 진입
                         isPythonMode = true;
                         printLine("Python 3.11.0 (main, Aug 21 2026) [Pyodide Environment]");
                         printLine('Type "exit()" or "quit()" to exit Python.');
@@ -666,24 +693,25 @@ TYPE      텍스트 파일의 내용을 표시합니다.`;
 
                 case 'pip':
                     if (!pyodide) {
-                        printLine("Python 엔진을 로드하는 중입니다.");
+                        printLine("Python 엔진을 로드하는 중입니다. 잠시 후 다시 시도하세요.");
                         return;
                     }
                     if (args[0] === 'install' && args[1]) {
                         const pkgName = args[1];
                         printLine(`Installing ${pkgName}...`);
                         try {
+                            // micropip을 사용하여 실제 Pyodide 가상환경에 패키지 비동기 설치
+                            await pyodide.loadPackage('micropip');
                             const micropip = pyodide.pyimport("micropip");
                             await micropip.install(pkgName);
                             printLine(`Successfully installed ${pkgName}`);
                         } catch (err) {
-                            printLine(`Successfully installed ${pkgName} (Simulated Package)`);
+                            printLine(`Error installing ${pkgName}: ${err.message}`);
                         }
                     } else {
                         printLine("Usage: pip install <package_name>");
                     }
                     break;
-
                 case 'notepad':
                     openNotepad(args[0]);
                     break;
