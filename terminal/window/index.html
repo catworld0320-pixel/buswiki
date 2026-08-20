@@ -3,37 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Windows Command Prompt Simulator with Python</title>
+    <title>명령 프롬프트</title>
     <!-- Pyodide CDN -->
     <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         body {
             background-color: #0c0c0c;
             color: #cccccc;
             font-family: 'Consolas', '맑은 고딕', 'Segoe UI', monospace;
-            padding: 12px;
             height: 100vh;
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
             position: relative;
         }
 
-        /* 터미널 전체 스크롤 영역 */
-        #terminal {
-            width: 100%;
+        /* Windows 터미널 스타일 상단 탭바 */
+        .terminal-tabbar {
+            height: 40px;
+            background-color: #1f1f1f;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding-left: 8px;
+            user-select: none;
+            border-bottom: 1px solid #111111;
+        }
+
+        .tab-group {
+            display: flex;
+            align-items: center;
             height: 100%;
+        }
+
+        .tab {
+            height: 32px;
+            background-color: #0c0c0c;
+            color: #ffffff;
+            padding: 0 12px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-family: 'Segoe UI', '맑은 고딕', sans-serif;
+            cursor: default;
+        }
+
+        .tab-icon {
+            width: 14px;
+            height: 14px;
+            background: #333;
+            color: #fff;
+            font-size: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 2px;
+        }
+
+        .tab-close {
+            margin-left: 4px;
+            font-size: 12px;
+            color: #888;
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        .tab-close:hover { background: #333; color: #fff; }
+
+        .btn-add-tab {
+            color: #ccc;
+            font-size: 16px;
+            padding: 4px 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-add-tab:hover { background: #2a2a2a; border-radius: 4px; }
+
+        /* 창 제어 버튼 (최소화, 최대화, 닫기) */
+        .window-controls {
+            display: flex;
+            height: 100%;
+        }
+        .win-btn {
+            width: 46px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #cccccc;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .win-btn:hover { background-color: #333333; }
+        .win-btn.close:hover { background-color: #c42b1c; color: #ffffff; }
+
+        /* 터미널 본문 영역 */
+        #terminal {
+            flex: 1;
+            padding: 12px;
             overflow-y: auto;
             white-space: pre-wrap;
             word-break: break-all;
         }
-        .line { margin-bottom: 2px; line-height: 1.3; }
+        .line { margin-bottom: 2px; line-height: 1.35; font-size: 14px; }
         
-        /* 입력 줄이 텍스트 흐름 바로 아래 자연스럽게 위치하도록 설정 */
         .input-line { 
             display: flex; 
             align-items: center; 
-            line-height: 1.3;
+            line-height: 1.35;
             margin-bottom: 2px;
+            font-size: 14px;
         }
         .prompt { color: #cccccc; margin-right: 6px; white-space: nowrap; }
         input[type="text"] {
@@ -41,13 +127,13 @@
             border: none;
             color: #cccccc;
             font-family: inherit;
-            font-size: 1rem;
+            font-size: 14px;
             flex: 1;
             outline: none;
             padding: 0;
         }
 
-        /* 윈도우 창 공통 스타일 */
+        /* 윈도우 창 공통 스타일 (탐색기, 메모장) */
         .window {
             position: absolute;
             background: #ffffff;
@@ -99,7 +185,7 @@
 
         /* 탐색기 전용 스타일 */
         #explorer-window {
-            top: 40px;
+            top: 50px;
             left: 60px;
             width: 950px;
             height: 580px;
@@ -227,13 +313,33 @@
 </head>
 <body onclick="document.getElementById('cmd-input').focus()">
 
-    <!-- 통합 터미널 영역 -->
+    <!-- Windows 터미널 탭바 -->
+    <div class="terminal-tabbar">
+        <div class="tab-group">
+            <div class="tab">
+                <span class="tab-icon">>_</span>
+                <span>명령 프롬프트</span>
+                <span class="tab-close">✕</span>
+            </div>
+            <div class="btn-add-tab">
+                <span>+</span>
+                <span style="font-size: 10px;">˅</span>
+            </div>
+        </div>
+        <div class="window-controls">
+            <div class="win-btn">─</div>
+            <div class="win-btn">☐</div>
+            <div class="win-btn close">✕</div>
+        </div>
+    </div>
+
+    <!-- 터미널 본문 -->
     <div id="terminal">
-        <div class="line">Microsoft Windows [Version 10.0.19045.3803]</div>
+        <div class="line">Microsoft Windows [Version 10.0.26200.9168]</div>
         <div class="line">(c) Microsoft Corporation. All rights reserved.</div>
-        <div class="line" id="python-status">[Python 3.11 엔진 초기화 준비 중...]</div>
+        <div class="line" style="height: 12px;"></div> <!-- 빈 줄 여백 -->
         
-        <!-- 입력 라인이 터미널 내부 맨 아래에 바로 이어짐 -->
+        <!-- 커서 입력 라인 -->
         <div class="input-line" id="active-input-line">
             <span class="prompt" id="prompt-text">C:\Users\OMEN></span>
             <input type="text" id="cmd-input" autofocus autocomplete="off" spellcheck="false">
@@ -356,14 +462,13 @@
         let currentPath = ["C:", "Users", "OMEN"];
         let currentEditingFile = null;
 
-        // Pyodide 엔진 비동기 로드
+        // Pyodide 엔진 백그라운드 로드
         async function initPython() {
             try {
                 pyodide = await loadPyodide();
                 await pyodide.loadPackage("micropip");
-                document.getElementById('python-status').innerText = "Python 3.11.0 (Pyodide 로드 완료) - 'python' 또는 'pip' 명령 사용 가능";
             } catch (err) {
-                document.getElementById('python-status').innerText = "Python 엔진 로드 중 오류가 발생했습니다.";
+                console.error("Python 엔진 로드 중 오류가 발생했습니다.");
             }
         }
         initPython();
@@ -410,7 +515,6 @@ TYPE      텍스트 파일의 내용을 표시합니다.`;
             promptText.innerText = getPromptString();
         }
 
-        // 라인 추가 (입력 필드 바로 위에 텍스트 노드 생성)
         function printLine(text) {
             const div = document.createElement('div');
             div.className = 'line';
@@ -419,7 +523,7 @@ TYPE      텍스트 파일의 내용을 표시합니다.`;
             terminal.scrollTop = terminal.scrollHeight;
         }
 
-        // 키보드 입력 및 Ctrl+C 처리
+        // 키보드 입력 이벤트 핸들러
         input.addEventListener('keydown', async (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'c') {
                 const selection = window.getSelection().toString();
@@ -434,7 +538,6 @@ TYPE      텍스트 파일의 내용을 표시합니다.`;
                 if (cmdLine.trim()) history.push(cmdLine);
                 historyIndex = history.length;
 
-                // 실행한 명령어를 상단 라인으로 올림
                 printLine(`${promptText.innerText}${cmdLine}`);
                 input.value = '';
 
@@ -453,7 +556,6 @@ TYPE      텍스트 파일의 내용을 표시합니다.`;
             }
         });
 
-        // 명령어 실행 함수
         async function executeCommand(cmdLine) {
             if (!cmdLine) return;
 
@@ -462,7 +564,6 @@ TYPE      텍스트 파일의 내용을 표시합니다.`;
             if (lower === 'open file' || lower === 'explorer') { openExplorer(); return; }
             if (lower === 'open txtfile' || lower === 'notepad') { openNotepad(); return; }
 
-            // 파일 저장 연산자 (>)
             if (cmdLine.includes('>')) {
                 const parts = cmdLine.split('>');
                 const leftCmd = parts[0].trim();
@@ -491,7 +592,6 @@ TYPE      텍스트 파일의 내용을 표시합니다.`;
                     break;
 
                 case 'cls':
-                    // 화면 초기화 시 activeInputLine을 제외한 이전 요소 삭제
                     Array.from(terminal.children).forEach(child => {
                         if (child !== activeInputLine) child.remove();
                     });
@@ -594,7 +694,6 @@ TYPE      텍스트 파일의 내용을 표시합니다.`;
             }
         }
 
-        // Python REPL 핸들러
         async function handlePythonREPL(code) {
             if (code.trim() === 'exit()' || code.trim() === 'quit()') {
                 isPythonMode = false;
@@ -610,7 +709,7 @@ TYPE      텍스트 파일의 내용을 표시합니다.`;
             }
         }
 
-        // --- 탐색기 & 메모장 GUI 제어 ---
+        // --- 탐색기 & 메모장 GUI ---
         const explorerWin = document.getElementById('explorer-window');
         const notepadWin = document.getElementById('notepad-window');
         const notepadTitle = document.getElementById('notepad-title');
@@ -701,7 +800,6 @@ TYPE      텍스트 파일의 내용을 표시합니다.`;
             renderExplorerList();
         }
 
-        // 메모장 저장 단축키
         window.addEventListener('keydown', (e) => {
             if (notepadWin.style.display === 'flex') {
                 if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 's') { e.preventDefault(); saveFile(true); }
@@ -709,7 +807,6 @@ TYPE      텍스트 파일의 내용을 표시합니다.`;
             }
         });
 
-        // 창 드래그 처리
         let highestZ = 100;
         function bringToFront(win) { highestZ++; win.style.zIndex = highestZ; }
 
