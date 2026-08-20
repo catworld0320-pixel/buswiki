@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오목 게임</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #1e1e24;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      position: relative;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      background: #2b2d42;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .left-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .controls {
+      margin-bottom: 15px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    button.btn-small {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: none;
+      background: #8d99ae;
+      color: #1e1e24;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button.btn-small:hover {
+      background: #edf2f4;
+    }
+    .status {
+      font-size: 1.1rem;
+      margin-bottom: 15px;
+      font-weight: 600;
+      color: #ef233c;
+    }
+    canvas {
+      background: #e0a96d;
+      border-radius: 4px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      cursor: pointer;
+    }
+    .right-panel {
+      width: 280px;
+      display: flex;
+      flex-direction: column;
+      background: #1e1e24;
+      border-radius: 8px;
+      padding: 15px;
+    }
+    .right-panel h3 {
+      margin-bottom: 10px;
+      border-bottom: 2px solid #8d99ae;
+      padding-bottom: 5px;
+      font-size: 1rem;
+    }
+    .history-list {
+      flex: 1;
+      max-height: 480px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-right: 5px;
+    }
+    .history-item {
+      font-size: 0.85rem;
+      background: #2b2d42;
+      padding: 6px 10px;
+      border-radius: 4px;
+      border-left: 4px solid #8d99ae;
+    }
+    .history-item.black { border-left-color: #000; }
+    .history-item.white { border-left-color: #fff; }
+
+    /* 오버레이 및 모달 레이아웃 */
+    .overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      border-radius: 12px;
+    }
+    .modal {
+      background: #2b2d42;
+      padding: 40px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+      max-width: 480px;
+      width: 90%;
+    }
+    .modal h1 {
+      font-size: 2.2rem;
+      margin-bottom: 25px;
+      color: #edf2f4;
+    }
+    .modal h2 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: #ef233c;
+    }
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .btn-main {
+      padding: 16px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      background: #d90429;
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.1s, background 0.2s;
+    }
+    .btn-main:hover {
+      background: #ef233c;
+      transform: translateY(-2px);
+    }
+    .btn-sub {
+      background: #8d99ae;
+      color: #1e1e24;
+    }
+    .btn-sub:hover {
+      background: #edf2f4;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="left-panel">
+    <div class="controls">
+      <span id="modeDisplay" style="font-weight: bold; font-size: 0.95rem;">모드: 대기 중</span>
+      <button class="btn-small" id="changeModeBtn">모드 변경</button>
+      <button class="btn-small" id="resetBtn">게임 리셋</button>
+    </div>
+    <div class="status" id="statusText">모드를 선택하세요</div>
+    <canvas id="board" width="510" height="510"></canvas>
+  </div>
+
+  <div class="right-panel">
+    <h3>기록</h3>
+    <div class="history-list" id="historyList"></div>
+  </div>
+
+  <!-- 모드 선택 모달 -->
+  <div class="overlay" id="selectionModal">
+    <div class="modal">
+      <h1 id="modalTitle">오목</h1>
+      <div class="btn-group" id="modalBtnGroup">
+        <!-- JS dynamic content -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 승리 모달 -->
+  <div class="overlay" id="winModal" style="display: none;">
+    <div class="modal">
+      <h2 id="winTitle">승리!</h2>
+      <div class="btn-group">
+        <button class="btn-main" id="restartBtn">게임 다시시작하기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const BOARD_SIZE = 15;
+  const CELL_SIZE = 34;
+  const PADDING = 20;
+
+  const canvas = document.getElementById('board');
+  const ctx = canvas.getContext('2d');
+  const statusText = document.getElementById('statusText');
+  const historyList = document.getElementById('historyList');
+  const modeDisplay = document.getElementById('modeDisplay');
+  const changeModeBtn = document.getElementById('changeModeBtn');
+  const resetBtn = document.getElementById('resetBtn');
+
+  const selectionModal = document.getElementById('selectionModal');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalBtnGroup = document.getElementById('modalBtnGroup');
+
+  const winModal = document.getElementById('winModal');
+  const winTitle = document.getElementById('winTitle');
+  const restartBtn = document.getElementById('restartBtn');
+
+  let board = Array.from({ length: BOARD_SIZE }, () => Array(BOARD_SIZE).fill(0));
+  let currentPlayer = 1; // 1: 흑, 2: 백
+  let isGameOver = false;
+  
+  let gameMode = ''; // 'pvp', 'ai', 'novice'
+  let aiDifficulty = ''; // 'easy', 'medium', 'hard'
+
+  let hintTimer = null;
+  let currentHint = null; // {r, c}
+
+  // 초기화 및 오버레이 설정
+  showMainMenu();
+
+  changeModeBtn.addEventListener('click', showMainMenu);
+  resetBtn.addEventListener('click', initGame);
+  restartBtn.addEventListener('click', () => {
+    winModal.style.display = 'none';
+    initGame();
+  });
+
+  function showMainMenu() {
+    clearTimeout(hintTimer);
+    currentHint = null;
+    winModal.style.display = 'none';
+    selectionModal.style.display = 'flex';
+    modalTitle.textContent = "오목 게임 모드 선택";
+    modalBtnGroup.innerHTML = `
+      <button class="btn-main" onclick="selectMainMode('pvp')">2인용</button>
+      <button class="btn-main" onclick="selectMainMode('ai')">AI</button>
+      <button class="btn-main" onclick="selectMainMode('novice')">왕초보전용</button>
+    `;
+  }
+
+  function selectMainMode(mode) {
+    gameMode = mode;
+    if (mode === 'pvp') {
+      selectionModal.style.display = 'none';
+      initGame();
+    } else {
+      showDifficultyMenu();
+    }
+  }
+
+  function showDifficultyMenu() {
+    modalTitle.textContent = gameMode === 'novice' ? "왕초보전용 - 난이도 선택" : "AI - 난이도 선택";
+    modalBtnGroup.innerHTML = `
+      <button class="btn-main btn-sub" onclick="startGameWithDifficulty('easy')">초보</button>
+      <button class="btn-main btn-sub" onclick="startGameWithDifficulty('medium')">중수</button>
+      <button class="btn-main btn-sub" onclick="startGameWithDifficulty('hard')">고수</button>
+    `;
+  }
+
+  function startGameWithDifficulty(diff) {
+    aiDifficulty = diff;
+    selectionModal.style.display = 'none';
+    initGame();
+  }
+
+  function initGame() {
+    board = Array.from({ length: BOARD_SIZE }, () => Array(BOARD_SIZE).fill(0));
+    currentPlayer = 1;
+    isGameOver = false;
+    historyList.innerHTML = '';
+    currentHint = null;
+    clearTimeout(hintTimer);
+
+    let modeText = "";
+    if (gameMode === 'pvp') modeText = "2인용";
+    else {
+      const diffName = aiDifficulty === 'easy' ? '초보' : (aiDifficulty === 'medium' ? '중수' : '고수');
+      modeText = `${gameMode === 'novice' ? '왕초보' : 'AI'} [${diffName}]`;
+    }
+    modeDisplay.textContent = `모드: ${modeText}`;
+    statusText.textContent = "흑돌(Player 1) 차례입니다.";
+
+    drawBoard();
+    resetHintTimer();
+  }
+
+  function resetHintTimer() {
+    clearTimeout(hintTimer);
+    currentHint = null;
+    drawBoard();
+
+    // 왕초보전용 모드이고, 플레이어(흑돌) 차례일 때 7초 타이머 가동
+    if (gameMode === 'novice' && currentPlayer === 1 && !isGameOver) {
+      hintTimer = setTimeout(() => {
+        const bestMove = getHeuristicMove(2);
+        if (bestMove) {
+          currentHint = bestMove;
+          drawBoard();
+        }
+      }, 7000);
+    }
+  }
+
+  function drawBoard() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // 격자
+    ctx.strokeStyle = '#333';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < BOARD_SIZE; i++) {
+      ctx.beginPath();
+      ctx.moveTo(PADDING + i * CELL_SIZE, PADDING);
+      ctx.lineTo(PADDING + i * CELL_SIZE, PADDING + (BOARD_SIZE - 1) * CELL_SIZE);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(PADDING, PADDING + i * CELL_SIZE);
+      ctx.lineTo(PADDING + (BOARD_SIZE - 1) * CELL_SIZE, PADDING + i * CELL_SIZE);
+      ctx.stroke();
+    }
+
+    // 화점 (3, 7, 11)
+    const dots = [3, 7, 11];
+    ctx.fillStyle = '#333';
+    for (let x of dots) {
+      for (let y of dots) {
+        ctx.beginPath();
+        ctx.arc(PADDING + x * CELL_SIZE, PADDING + y * CELL_SIZE, 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // 힌트 (초록색 에메랄드 유리 느낌)
+    if (currentHint) {
+      const hx = PADDING + currentHint.c * CELL_SIZE;
+      const hy = PADDING + currentHint.r * CELL_SIZE;
+      ctx.beginPath();
+      ctx.arc(hx, hy, CELL_SIZE / 2 - 1, 0, Math.PI * 2);
+      
+      const hintGrad = ctx.createRadialGradient(hx - 2, hy - 2, 1, hx, hy, CELL_SIZE / 2);
+      hintGrad.addColorStop(0, 'rgba(163, 255, 203, 0.85)');
+      hintGrad.addColorStop(1, 'rgba(46, 204, 113, 0.6)');
+      
+      ctx.fillStyle = hintGrad;
+      ctx.fill();
+      ctx.strokeStyle = '#27ae60';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.lineWidth = 1;
+    }
+
+    // 돌 그리기
+    for (let r = 0; r < BOARD_SIZE; r++) {
+      for (let c = 0; c < BOARD_SIZE; c++) {
+        if (board[r][c] !== 0) {
+          drawPiece(r, c, board[r][c]);
+        }
+      }
+    }
+  }
+
+  function drawPiece(row, col, player) {
+    const x = PADDING + col * CELL_SIZE;
+    const y = PADDING + row * CELL_SIZE;
+
+    ctx.beginPath();
+    ctx.arc(x, y, CELL_SIZE / 2 - 2, 0, Math.PI * 2);
+    
+    const grad = ctx.createRadialGradient(x - 3, y - 3, 1, x, y, CELL_SIZE / 2);
+    if (player === 1) {
+      grad.addColorStop(0, '#666');
+      grad.addColorStop(1, '#000');
+    } else {
+      grad.addColorStop(0, '#fff');
+      grad.addColorStop(1, '#ccc');
+    }
+    
+    ctx.fillStyle = grad;
+    ctx.fill();
+    ctx.strokeStyle = player === 1 ? '#000' : '#888';
+    ctx.stroke();
+  }
+
+  canvas.addEventListener('click', (e) => {
+    if (isGameOver) return;
+    if (gameMode !== 'pvp' && currentPlayer === 2) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left - PADDING;
+    const y = e.clientY - rect.top - PADDING;
+
+    const col = Math.round(x / CELL_SIZE);
+    const row = Math.round(y / CELL_SIZE);
+
+    if (row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE) {
+      if (board[row][col] === 0) {
+        makeMove(row, col);
+      }
+    }
+  });
+
+  function makeMove(row, col) {
+    board[row][col] = currentPlayer;
+    
+    const now = new Date();
+    const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+    
+    let playerName = "";
+    if (gameMode === 'pvp') {
+      playerName = currentPlayer === 1 ? "Player 1(흑)" : "Player 2(백)";
+    } else {
+      const diffName = aiDifficulty === 'easy' ? '초보' : (aiDifficulty === 'medium' ? '중수' : '고수');
+      playerName = currentPlayer === 1 ? "Player(흑)" : `AI[${diffName}](백)`;
+    }
+
+    const colName = String.fromCharCode(65 + col);
+    const rowName = 15 - row;
+
+    addHistory(`${timeStr} - ${playerName}: ${colName}${rowName} (${row + 1}, ${col + 1})`, currentPlayer);
+
+    drawBoard();
+
+    if (checkWin(row, col, currentPlayer)) {
+      statusText.textContent = `${playerName} 승리!`;
+      isGameOver = true;
+      clearTimeout(hintTimer);
+      
+      setTimeout(() => {
+        const winnerStone = currentPlayer === 1 ? "흑" : "백";
+        winTitle.textContent = `${winnerStone}돌이 승리!`;
+        winModal.style.display = 'flex';
+      }, 300);
+      return;
+    }
+
+    currentPlayer = currentPlayer === 1 ? 2 : 1;
+    statusText.textContent = currentPlayer === 1 ? "흑돌 차례입니다." : "백돌 차례입니다.";
+
+    resetHintTimer();
+
+    if (gameMode !== 'pvp' && currentPlayer === 2 && !isGameOver) {
+      setTimeout(makeAIMove, 400);
+    }
+  }
+
+  function addHistory(text, player) {
+    const item = document.createElement('div');
+    item.className = `history-item ${player === 1 ? 'black' : 'white'}`;
+    item.textContent = text;
+    historyList.appendChild(item);
+    historyList.scrollTop = historyList.scrollHeight;
+  }
+
+  function checkWin(r, c, p) {
+    const dirs = [
+      [[0, 1], [0, -1]],
+      [[1, 0], [-1, 0]],
+      [[1, 1], [-1, -1]],
+      [[1, -1], [-1, 1]]
+    ];
+
+    for (let dir of dirs) {
+      let count = 1;
+      for (let [dr, dc] of dir) {
+        let nr = r + dr;
+        let nc = c + dc;
+        while (nr >= 0 && nr < BOARD_SIZE && nc >= 0 && nc < BOARD_SIZE && board[nr][nc] === p) {
+          count++;
+          nr += dr;
+          nc += dc;
+        }
+      }
+      if (count >= 5) return true;
+    }
+    return false;
+  }
+
+  // --- AI Logic ---
+  function makeAIMove() {
+    let move;
+    if (aiDifficulty === 'easy') {
+      move = getEasyMove();
+    } else if (aiDifficulty === 'medium') {
+      move = getHeuristicMove(1);
+    } else {
+      move = getHeuristicMove(2);
+    }
+
+    if (move) {
+      makeMove(move.r, move.c);
+    }
+  }
+
+  // 개선된 초보 AI: 무작위가 아닌 최소한의 방어(열린 3/4)는 수행
+  function getEasyMove() {
+    let bestScore = -1;
+    let candidates = [];
+
+    for (let r = 0; r < BOARD_SIZE; r++) {
+      for (let c = 0; c < BOARD_SIZE; c++) {
+        if (board[r][c] !== 0) continue;
+        if (!hasNeighbor(r, c) && board[7][7] !== 0) continue;
+
+        let score = evaluatePoint(r, c, 2) + evaluatePoint(r, c, 1) * 0.8;
+        if (score > bestScore) {
+          bestScore = score;
+          candidates = [{ r, c }];
+        } else if (score === bestScore) {
+          candidates.push({ r, c });
+        }
+      }
+    }
+
+    if (candidates.length > 0 && Math.random() < 0.7) {
+      return candidates[Math.floor(Math.random() * candidates.length)];
+    }
+    return getRandomMove();
+  }
+
+  function getRandomMove() {
+    const emptyCells = [];
+    for (let r = 0; r < BOARD_SIZE; r++) {
+      for (let c = 0; c < BOARD_SIZE; c++) {
+        if (board[r][c] === 0) emptyCells.push({ r, c });
+      }
+    }
+    if (emptyCells.length === 0) return null;
+    return emptyCells[Math.floor(Math.random() * emptyCells.length)];
+  }
+
+  function getHeuristicMove(depth) {
+    let bestScore = -Infinity;
+    let bestMoves = [];
+
+    for (let r = 0; r < BOARD_SIZE; r++) {
+      for (let c = 0; c < BOARD_SIZE; c++) {
+        if (board[r][c] !== 0) continue;
+        if (!hasNeighbor(r, c) && board[7][7] !== 0) continue;
+
+        const myColor = currentPlayer;
+        const oppColor = currentPlayer === 1 ? 2 : 1;
+
+        let attackScore = evaluatePoint(r, c, myColor);
+        let defenseScore = evaluatePoint(r, c, oppColor);
+
+        // 고수일수록 방어 및 패턴 조합 가중치를 대폭 상향
+        let totalScore = attackScore + defenseScore * (depth === 2 ? 1.35 : 1.0);
+
+        if (totalScore > bestScore) {
+          bestScore = totalScore;
+          bestMoves = [{ r, c }];
+        } else if (totalScore === bestScore) {
+          bestMoves.push({ r, c });
+        }
+      }
+    }
+
+    return bestMoves.length > 0 ? bestMoves[Math.floor(Math.random() * bestMoves.length)] : getRandomMove();
+  }
+
+  function hasNeighbor(r, c) {
+    for (let dr = -2; dr <= 2; dr++) {
+      for (let dc = -2; dc <= 2; dc++) {
+        let nr = r + dr;
+        let nc = c + dc;
+        if (nr >= 0 && nr < BOARD_SIZE && nc >= 0 && nc < BOARD_SIZE) {
+          if (board[nr][nc] !== 0) return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  function evaluatePoint(r, c, player) {
+    const dirs = [[0, 1], [1, 0], [1, 1], [1, -1]];
+    let totalVal = 0;
+
+    for (let [dr, dc] of dirs) {
+      let count = 1;
+      let openEnds = 0;
+
+      let nr = r + dr, nc = c + dc;
+      while (nr >= 0 && nr < BOARD_SIZE && nc >= 0 && nc < BOARD_SIZE && board[nr][nc] === player) {
+        count++;
+        nr += dr; nc += dc;
+      }
+      if (nr >= 0 && nr < BOARD_SIZE && nc >= 0 && nc < BOARD_SIZE && board[nr][nc] === 0) openEnds++;
+
+      nr = r - dr; nc = c - dc;
+      while (nr >= 0 && nr < BOARD_SIZE && nc >= 0 && nc < BOARD_SIZE && board[nr][nc] === player) {
+        count++;
+        nr -= dr; nc -= dc;
+      }
+      if (nr >= 0 && nr < BOARD_SIZE && nc >= 0 && nc < BOARD_SIZE && board[nr][nc] === 0) openEnds++;
+
+      if (count >= 5) totalVal += 500000;
+      else if (count === 4 && openEnds === 2) totalVal += 50000;
+      else if (count === 4 && openEnds === 1) totalVal += 10000;
+      else if (count === 3 && openEnds === 2) totalVal += 5000;
+      else if (count === 3 && openEnds === 1) totalVal += 500;
+      else if (count === 2 && openEnds === 2) totalVal += 100;
+    }
+    return totalVal;
+  }
+</script>
+</body>
+</html>
